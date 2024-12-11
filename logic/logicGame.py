@@ -21,7 +21,6 @@ def dict_to_game_config(config_dict):
 class Game:
     def __init__(self, game_config: GameConfigType):
         self.num_blocks = game_config.level_block_num
-        
         self.current_score = 0
         self.game_over = False
         self.blocks = game_config.blocks
@@ -30,25 +29,45 @@ class Game:
         self.level_num = game_config.level_num
         self.block_types = game_config.animals
         self.build_game(game_config)
+
     def is_win(self):
         # Kiểm tra nếu tất cả các block đã được chọn
         return all(block.is_removed for block in self.blocks)
 
     def build_game(self, game_config: GameConfigType):
-        for level in range(1, self.level_num + 1):
-            for _ in range(game_config.level_block_num // self.level_num):
-                block_type = random.choice(self.block_types)
-                x = random.randint(0, GRID_COLS - 1) * BLOCK_SIZE
-                y = random.randint(0, GRID_ROWS - 1) * BLOCK_SIZE
-                block = BlockType(
-                    block_id=len(self.blocks),
-                    x=x,
-                    y=y,
-                    level=level,
+        blocks = self.generate_blocks(game_config)
+        arranged_blocks = self.arrange_blocks(blocks)
+        self.blocks = arranged_blocks
+
+    def generate_blocks(self, game_config: GameConfigType):
+        total_blocks = game_config.level_block_num
+        block_types = game_config.animals
+        blocks = []
+        
+        # Chia thành các bộ 3 (hoặc cặp nếu cần)
+        for i in range(total_blocks // 3):
+            block_type = random.choice(block_types)
+            for _ in range(3):  # Tạo 3 block giống nhau
+                blocks.append(BlockType(
+                    block_id=len(blocks),
+                    x=0,  # Gán tạm, sẽ cập nhật sau
+                    y=0,
+                    level=0,  # Gán tạm
                     type_=block_type,
                     status=1
-                )
-                self.blocks.append(block)
+                ))
+        return blocks
+
+    def arrange_blocks(self, blocks):
+        random.shuffle(blocks)  # Trộn block để tăng tính ngẫu nhiên
+        arranged_blocks = []
+        for level in range(1, GRID_ROWS + 1):
+            for block in blocks:
+                block.level = level
+                block.x = random.randint(0, GRID_COLS - 1) * BLOCK_SIZE
+                block.y = random.randint(0, GRID_ROWS - 1) * BLOCK_SIZE
+                arranged_blocks.append(block)
+        return arranged_blocks
 
     def is_block_visible(self, block):
         for other in self.blocks:
@@ -83,6 +102,7 @@ class Game:
             print("Game Over! Slot is full.")
 
         self.check_win_condition()
+
     def match_blocks_in_slot(self):
         """Xóa 3 block giống nhau trong thanh nếu có"""
         count = {}
