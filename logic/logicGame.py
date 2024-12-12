@@ -1,4 +1,5 @@
 import random
+import pygame 
 from logic.typeGame import BlockType, GameConfigType
 
 GRID_COLS = 8
@@ -85,21 +86,31 @@ class Game:
                         arranged_blocks.append(block)
         return arranged_blocks
 
-    def is_block_visible(self, block):
+   # Phương thức trong Game class
+    def is_block_interactable(self, block):
+        # Lấy tất cả các block để kiểm tra
         for other in self.blocks:
-            if (other.block_id != block.block_id and
-                other.level > block.level and
-                other.x == block.x and
-                other.y == block.y and 
-                other.status == 1):
-                return False
-        return True
+            if other.block_id != block.block_id and other.level > block.level:  # Kiểm tra nếu block này bị che khuất bởi block phía trước
+                if pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE).colliderect(
+                    pygame.Rect(other.x, other.y, BLOCK_SIZE, BLOCK_SIZE)
+                ):
+                    return False  # Block bị che khuất, không thể tương tác
+        return True  # Block có thể tương tác
 
     def update_visibility(self):
         for block in self.blocks:
             if block.status == 1:
                 block.visible = self.is_block_visible(block)
 
+    # Check if a block is visible (not obscured by others)
+    def is_block_visible(self, block):
+        for other in self.blocks:  # Thay vì dùng `all_blocks`, sử dụng `self.blocks`
+            if other.block_id != block.block_id and other.level > block.level:
+                if pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE).colliderect(
+                    pygame.Rect(other.x, other.y, BLOCK_SIZE, BLOCK_SIZE)
+                ):
+                    return False  # Block bị che khuất, không thể hiển thị
+        return True  # Block có thể hiển thị
     def select_block(self, block):
         if block not in self.selected_blocks:
             self.selected_blocks.append(block)

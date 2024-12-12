@@ -32,15 +32,7 @@ animal_images = {name: pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE)) f
 # Initialize Game with default config
 game = None
 
-# Check if a block is visible (not obscured by others)
-def is_block_visible(block, all_blocks):
-    for other in all_blocks:
-        if other.block_id != block.block_id and other.level > block.level:
-            if pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE).colliderect(
-                pygame.Rect(other.x, other.y, BLOCK_SIZE, BLOCK_SIZE)
-            ):
-                return False  # Obscured
-    return True
+
 
 # Draw blocks with visibility effects
 def draw_blocks_with_images():
@@ -52,7 +44,7 @@ def draw_blocks_with_images():
         animal_image = animal_images.get(block.type_)
 
         if animal_image:
-            animal_image.set_alpha(100 if not is_block_visible(block, game.blocks) else 255)
+            animal_image.set_alpha(100 if not game.is_block_visible(block) else 255)
             screen.blit(animal_image, rect.topleft)
 
 # Draw slots at the bottom of the screen
@@ -68,17 +60,18 @@ def draw_slots():
             if animal_image:
                 screen.blit(animal_image, (x, y))
 
-# Handle block clicks
+# Hàm xử lý click block
 def handle_block_click(pos):
-    for block in reversed(game.blocks):
-        if block.is_removed:
-            continue
+    for block in reversed(game.blocks):  # Kiểm tra các block từ trên xuống dưới
+        if block.is_removed or not game.is_block_interactable(block):  # Gọi phương thức từ đối tượng game
+            continue  # Bỏ qua nếu block bị xóa hoặc không thể tương tác
 
         rect = pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE)
-        if rect.collidepoint(pos):
+        if rect.collidepoint(pos):  # Nếu người chơi click vào block này
             game.select_block(block)
             block.is_removed = True
             break
+
 
 # Check win/lose conditions
 def check_win_lose():
