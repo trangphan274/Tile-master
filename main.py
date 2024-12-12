@@ -3,7 +3,7 @@ import sys
 from logic.logicGame import Game, dict_to_game_config
 from logic.levelsGame import easy_game_config, middle_game_config, hard_game_config
 
-# Các thông số cấu hình
+# Configuration parameters
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 WHITE = (255, 255, 255)
@@ -14,13 +14,13 @@ BUTTON_HOVER = (100, 149, 237)
 FONT_SIZE = 36
 BLOCK_SIZE = 50
 
-# Khởi tạo Pygame
+# Initialize Pygame
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Sheep A Sheep")
 font = pygame.font.SysFont(None, FONT_SIZE)
 
-# Dữ liệu animals và file ảnh tương ứng
+# Load animal images
 animals = {
     "turtle.png": pygame.image.load("turtle.png"),
     "dog.png": pygame.image.load("dog.png"),
@@ -29,41 +29,33 @@ animals = {
 }
 animal_images = {name: pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE)) for name, image in animals.items()}
 
-# Khởi tạo Game với cấu hình mặc định
-game = Game(game_config=dict_to_game_config(easy_game_config))
+# Initialize Game with default config
+game = None
 
-# Hàm kiểm tra block bị che khuất (hiệu ứng mờ đen)
+# Check if a block is visible (not obscured by others)
 def is_block_visible(block, all_blocks):
     for other in all_blocks:
         if other.block_id != block.block_id and other.level > block.level:
             if pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE).colliderect(
                 pygame.Rect(other.x, other.y, BLOCK_SIZE, BLOCK_SIZE)
             ):
-                return False  # Bị che khuất
+                return False  # Obscured
     return True
 
-# Hàm vẽ các block với hiệu ứng mờ đen cho các block bị che khuất
+# Draw blocks with visibility effects
 def draw_blocks_with_images():
-    for block in sorted(game.blocks, key=lambda b: b.level):  # Vẽ theo layer
+    for block in sorted(game.blocks, key=lambda b: (b.level, b.y, b.x)):
         if block.is_removed:
             continue
 
         rect = pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE)
-        animal_image = animal_images.get(block.type)
+        animal_image = animal_images.get(block.type_)
 
-        if not animal_image:
-            continue  # Kiểm tra nếu ảnh không có sẵn
+        if animal_image:
+            animal_image.set_alpha(100 if not is_block_visible(block, game.blocks) else 255)
+            screen.blit(animal_image, rect.topleft)
 
-        # Kiểm tra nếu block bị che khuất
-        if not is_block_visible(block, game.blocks):
-            # Vẽ màu đen mờ cho block bị che khuất
-            shadow_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
-            shadow_surface.fill((0, 0, 0, 100))  # Màu đen với độ trong suốt
-            screen.blit(shadow_surface, rect.topleft)  # Vẽ shadow trước
-
-        screen.blit(animal_image, rect.topleft)  # Vẽ block lên trên shadow
-
-# Hàm vẽ các slot
+# Draw slots at the bottom of the screen
 def draw_slots():
     slot_width = 50
     for i in range(7):
@@ -72,11 +64,11 @@ def draw_slots():
         pygame.draw.rect(screen, GRAY, (x, y, slot_width, slot_width))
         if i < len(game.selected_blocks):
             block = game.selected_blocks[i]
-            animal_image = animal_images.get(block.type)
+            animal_image = animal_images.get(block.type_)
             if animal_image:
                 screen.blit(animal_image, (x, y))
 
-# Hàm xử lý khi click vào block
+# Handle block clicks
 def handle_block_click(pos):
     for block in reversed(game.blocks):
         if block.is_removed:
@@ -85,28 +77,28 @@ def handle_block_click(pos):
         rect = pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE)
         if rect.collidepoint(pos):
             game.select_block(block)
-            block.is_removed = True  # Đánh dấu block đã được chọn
+            block.is_removed = True
             break
 
-# Hàm kiểm tra thắng/thua
+# Check win/lose conditions
 def check_win_lose():
-    if len(game.selected_blocks) > 7:
-        print("Game Over: Thanh dưới đầy!")
+    if len(game.selected_blocks) == 7:
+        print("Game Over: Slots are full!")
         pygame.quit()
         sys.exit()
 
     if game.is_win():
-        print("Bạn đã thắng!")
+        print("You Win!")
         pygame.quit()
         sys.exit()
 
-# Trang chọn chế độ chơi
+# Game mode selection menu
 def menu_UI(on_mode_selected):
     running = True
     modes = [
-        {"name": "简单模式", "key": "easy"},
-        {"name": "中等模式", "key": "medium"},
-        {"name": "困难模式", "key": "hard"}
+        {"name": "Easy Mode", "key": "easy"},
+        {"name": "Medium Mode", "key": "medium"},
+        {"name": "Hard Mode", "key": "hard"}
     ]
     buttons = []
     button_width, button_height = 300, 50
@@ -138,7 +130,7 @@ def menu_UI(on_mode_selected):
 
         pygame.display.update()
 
-# Hàm vẽ nút menu
+# Draw a button with hover effect
 def draw_button(x, y, w, h, text, is_hovered=False):
     color = BUTTON_HOVER if is_hovered else BUTTON_COLOR
     pygame.draw.rect(screen, color, (x, y, w, h), border_radius=10)
@@ -146,11 +138,10 @@ def draw_button(x, y, w, h, text, is_hovered=False):
     label_rect = label.get_rect(center=(x + w // 2, y + h // 2))
     screen.blit(label, label_rect)
 
-# Hàm xử lý khi chọn chế độ
+# Handle game mode selection
 def on_mode_selected(mode):
-    print(f"Chế độ đã chọn: {mode}")
+    print(f"Selected mode: {mode}")
 
-    # Chuyển đổi cấu hình game tương ứng từ levelsGame.py
     if mode == "easy":
         game_config = easy_game_config
     elif mode == "medium":
@@ -158,30 +149,35 @@ def on_mode_selected(mode):
     else:
         game_config = hard_game_config
 
-    # Chuyển đổi cấu hình từ dictionary sang GameConfigType
     global game
-    game = Game(game_config=dict_to_game_config(game_config))  # Cập nhật lại game với cấu hình mới
-
-# Chạy menu
+    game = Game(game_config=dict_to_game_config(game_config))
+    print(f"Game initialized with {len(game.blocks)} blocks.")
+# Run the menu
 menu_UI(on_mode_selected)
 
-# Vòng lặp chính
+# Ensure game is initialized before entering main loop
+if game is None:
+    print("Game configuration not loaded correctly.")
+    pygame.quit()
+    sys.exit()
+
+# Main game loop
 running = True
 while running:
     screen.fill(WHITE)
 
-    # Vẽ các block và slots
+    # Draw blocks and slots
     draw_blocks_with_images()
     draw_slots()
 
-    # Xử lý sự kiện
+    # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             handle_block_click(event.pos)
 
-    # Kiểm tra trạng thái game
+    # Check game status
     check_win_lose()
 
     pygame.display.update()

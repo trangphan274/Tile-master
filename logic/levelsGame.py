@@ -5,52 +5,68 @@ animals = ["bird.png", "dog.png", "tree.png", "turtle.png"]
 
 # Hàm tạo pattern cố định cho mỗi màn
 def generate_fixed_pattern(level):
-    if not animals:  # Kiểm tra xem animals có trống không
-        raise ValueError("The animals list is empty!")  # Thông báo lỗi nếu trống
+    if not animals:
+        raise ValueError("The animals list is empty!")
 
-    if level == 1:
-        # Pattern hình vuông 3x3, 2 lớp (lớp trên và lớp dưới)
-        pattern = [[random.choice(animals) for _ in range(3)] for _ in range(3)]  # lớp trên
-        pattern.append([random.choice(animals) for _ in range(9)])  # lớp dưới
-    elif level == 2:
-        # Pattern random, 3 lớp
-        pattern = []
-        for _ in range(3):  # 3 lớp
-            layer = [random.choice(animals) for _ in range(random.randint(6, 9))]  # random số ô
-            pattern.append(layer)
-    elif level == 3:
-        # Pattern hình tròn, 1 lớp
-        pattern = [[random.choice(animals) for _ in range(5)] for _ in range(5)]  # Ví dụ hình tròn
-    else:
-        # Màn mặc định
-        pattern = [[random.choice(animals) for _ in range(7)] for _ in range(7)]  # 1 lớp duy nhất
-    
-    return pattern
+    # Xác định kích thước grid theo level
+    grid_size = {
+        1: (3, 3),  # Level 1: 3x3 grid
+        2: (3, 6),  # Level 2: 3x6 grid
+        3: (6, 6)   # Level 3: 6x6 grid
+    }.get(level, (3, 3))  # Default 3x3 grid nếu level không xác định
 
+    rows, cols = grid_size
+    total_blocks = rows * cols
+    total_blocks_needed = total_blocks * 2  # Tổng số block cần cho 2 lớp
 
-# Hàm hiển thị pattern
-def display_pattern(pattern):
-    for level in range(len(pattern)):
-        print(f"Layer {level + 1}:")
-        print(pattern[level])
-        print()
+    # Đảm bảo tổng số block là bội số của 3
+    if total_blocks_needed % 3 != 0:
+        raise ValueError("The total number of blocks (rows * cols * layers) must be divisible by 3.")
 
-# Thử tạo pattern cho màn 1 và màn 2
+    # Tạo block pool sao cho mỗi loại icon có số lượng chia hết cho 3
+    block_pool = []
+    blocks_per_icon = total_blocks_needed // len(animals)
+
+    for animal in animals:
+        # Đảm bảo số lượng của mỗi icon chia hết cho 3
+        count = blocks_per_icon
+        if count % 3 != 0:
+            count += 3 - (count % 3)
+        block_pool.extend([animal] * count)
+
+    # Đảm bảo số block trong pool không vượt quá tổng cần thiết
+    block_pool = block_pool[:total_blocks_needed]
+    random.shuffle(block_pool)  # Trộn ngẫu nhiên
+
+    # Tạo grid (pattern) từ block_pool
+    # Lớp 1
+    layer_1 = [[block_pool.pop() for _ in range(cols)] for _ in range(rows)]
+
+    # Lớp 2 (ít block hơn để tạo cảm giác chồng)
+    layer_2 = [[block_pool.pop() if random.random() > 0.5 else None for _ in range(cols)] for _ in range(rows)]
+
+    return [layer_1, layer_2]
+
+# Cấu hình game cho từng mức độ khó
 easy_game_config = {
     "level": 1,
+    "grid_size": (3, 3),
     "pattern": generate_fixed_pattern(1),  # Gọi hàm tạo pattern cho level 1
-    "other_config": "value_for_easy_game"  # Các cấu hình khác nếu cần
+    "time_limit": 60,  # Giới hạn thời gian (giây)
 }
 
 middle_game_config = {
     "level": 2,
+    "grid_size": (3, 6),
     "pattern": generate_fixed_pattern(2),  # Gọi hàm tạo pattern cho level 2
-    "other_config": "value_for_middle_game"  # Các cấu hình khác
+    "time_limit": 90,  # Giới hạn thời gian (giây)
 }
 
 hard_game_config = {
     "level": 3,
+    "grid_size": (6, 6),
     "pattern": generate_fixed_pattern(3),  # Gọi hàm tạo pattern cho level 3
-    "other_config": "value_for_hard_game"  # Các cấu hình khác
+    "time_limit": 120,  # Giới hạn thời gian (giây)
 }
 
+# Các config này có thể được import từ file khác để sử dụng
