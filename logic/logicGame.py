@@ -59,15 +59,19 @@ class Game:
         return blocks
 
     def arrange_blocks(self, blocks):
-        random.shuffle(blocks)  # Trộn block để tăng tính ngẫu nhiên
+        grid_positions = set()
         arranged_blocks = []
-        for level in range(1, GRID_ROWS + 1):
-            for block in blocks:
-                block.level = level
-                block.x = random.randint(0, GRID_COLS - 1) * BLOCK_SIZE
-                block.y = random.randint(0, GRID_ROWS - 1) * BLOCK_SIZE
-                arranged_blocks.append(block)
+        for block in blocks:
+            while True:
+                x = random.randint(0, GRID_COLS - 1) * BLOCK_SIZE
+                y = random.randint(0, GRID_ROWS - 1) * BLOCK_SIZE
+                if (x, y) not in grid_positions:  # Đảm bảo không bị trùng vị trí
+                    grid_positions.add((x, y))
+                    block.x, block.y = x, y
+                    arranged_blocks.append(block)
+                    break
         return arranged_blocks
+
 
     def is_block_visible(self, block):
         for other in self.blocks:
@@ -135,12 +139,12 @@ class Game:
         else:
             return f"Current Score: {self.current_score}, Selected Blocks: {len(self.selected_blocks)}"
 
-    def reset_game(self):
+    def reset_game(self, game_config: GameConfigType):
         self.blocks = []
         self.current_score = 0
         self.game_over = False
         self.selected_blocks = []
-        self.build_game()
+        self.build_game(game_config)
 
 if __name__ == "__main__":
     example_config_dict = {
