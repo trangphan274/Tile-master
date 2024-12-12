@@ -19,19 +19,12 @@ class ChessBoardUnitType:
 
 # Định nghĩa GameConfigType
 class GameConfigType:
-    def __init__(self, slot_num: int, compose_num: int, type_num: int, level_block_num: int, 
-        border_step: int, level_num: int, random_blocks: List[int], animals: List[str], blocks: List[BlockType] = None):
-        self.slot_num = slot_num  # Số lượng khe
-        self.compose_num = compose_num  # Số lượng khối cần hợp thành
-        self.type_num = type_num  # Số loại động vật
-        self.level_block_num = level_block_num  # Số khối trên mỗi cấp
-        self.border_step = border_step  # Bước thu hẹp biên
-        self.level_num = level_num  # Số cấp độ
-        self.random_blocks = random_blocks  # Số lượng khối ngẫu nhiên
-        self.animals = animals  # Mảng các loại động vật
-        self.blocks = blocks or []  # Danh sách các blocks, mặc định là rỗng
-
-# Định nghĩa SkillType
+    def __init__(self, level_num, random_blocks, animals, blocks, pattern):
+        self.level_num = level_num  # Lưu trữ level
+        self.random_blocks = random_blocks
+        self.animals = animals
+        self.blocks = blocks
+        self.pattern = pattern  # Lưu trữ pattern của level# Định nghĩa SkillType
 class SkillType:
     def __init__(self, name: str, desc: str, icon: str, action: Callable):
         self.name = name  # Tên kỹ năng

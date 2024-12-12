@@ -1,7 +1,7 @@
 import pygame
 import sys
-from logic.logicGame import Game, dict_to_game_config  # Import Game và hàm chuyển đổi
-from logic.levelsGame import default_game_config, easy_game_config, middle_game_config, hard_game_config, lunatic_game_config, sky_game_config, yang_game_config  # Import cấu hình
+from logic.logicGame import Game, dict_to_game_config
+from logic.levelsGame import easy_game_config, middle_game_config, hard_game_config
 
 # Các thông số cấu hình
 SCREEN_WIDTH = 800
@@ -29,8 +29,8 @@ animals = {
 }
 animal_images = {name: pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE)) for name, image in animals.items()}
 
-# Chuyển đổi cấu hình mặc định từ dictionary sang GameConfigType
-game = Game(game_config=dict_to_game_config(default_game_config))
+# Khởi tạo Game với cấu hình mặc định
+game = Game(game_config=dict_to_game_config(easy_game_config))
 
 # Hàm kiểm tra block bị che khuất (hiệu ứng mờ đen)
 def is_block_visible(block, all_blocks):
@@ -49,7 +49,10 @@ def draw_blocks_with_images():
             continue
 
         rect = pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE)
-        animal_image = animal_images[block.type]
+        animal_image = animal_images.get(block.type)
+
+        if not animal_image:
+            continue  # Kiểm tra nếu ảnh không có sẵn
 
         # Kiểm tra nếu block bị che khuất
         if not is_block_visible(block, game.blocks):
@@ -69,8 +72,9 @@ def draw_slots():
         pygame.draw.rect(screen, GRAY, (x, y, slot_width, slot_width))
         if i < len(game.selected_blocks):
             block = game.selected_blocks[i]
-            animal_image = animal_images[block.type]
-            screen.blit(animal_image, (x, y))
+            animal_image = animal_images.get(block.type)
+            if animal_image:
+                screen.blit(animal_image, (x, y))
 
 # Hàm xử lý khi click vào block
 def handle_block_click(pos):
@@ -102,10 +106,7 @@ def menu_UI(on_mode_selected):
     modes = [
         {"name": "简单模式", "key": "easy"},
         {"name": "中等模式", "key": "medium"},
-        {"name": "困难模式", "key": "hard"},
-        {"name": "地狱模式", "key": "lunatic"},
-        {"name": "天狱模式", "key": "sky"},
-        {"name": "羊了个羊模式", "key": "yang"}
+        {"name": "困难模式", "key": "hard"}
     ]
     buttons = []
     button_width, button_height = 300, 50
@@ -148,23 +149,18 @@ def draw_button(x, y, w, h, text, is_hovered=False):
 # Hàm xử lý khi chọn chế độ
 def on_mode_selected(mode):
     print(f"Chế độ đã chọn: {mode}")
+
     # Chuyển đổi cấu hình game tương ứng từ levelsGame.py
     if mode == "easy":
         game_config = easy_game_config
     elif mode == "medium":
         game_config = middle_game_config
-    elif mode == "hard":
-        game_config = hard_game_config
-    elif mode == "lunatic":
-        game_config = lunatic_game_config
-    elif mode == "sky":
-        game_config = sky_game_config
     else:
-        game_config = yang_game_config
+        game_config = hard_game_config
 
     # Chuyển đổi cấu hình từ dictionary sang GameConfigType
     global game
-    game = Game(game_config=dict_to_game_config(game_config))
+    game = Game(game_config=dict_to_game_config(game_config))  # Cập nhật lại game với cấu hình mới
 
 # Chạy menu
 menu_UI(on_mode_selected)
