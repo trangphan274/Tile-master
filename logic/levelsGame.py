@@ -16,34 +16,35 @@ def generate_fixed_pattern(level):
     }.get(level, (3, 3))  # Default 3x3 grid nếu level không xác định
 
     rows, cols = grid_size
-    total_blocks = rows * cols
-    total_blocks_needed = total_blocks * 2  # Tổng số block cần cho 2 lớp
+    total_blocks = rows * cols * 2  # Tổng số block cần cho 2 lớp
 
     # Đảm bảo tổng số block là bội số của 3
-    if total_blocks_needed % 3 != 0:
-        raise ValueError("The total number of blocks (rows * cols * layers) must be divisible by 3.")
+    while total_blocks % 3 != 0:
+        total_blocks += 1
 
-    # Tạo block pool sao cho mỗi loại icon có số lượng chia hết cho 3
+    # Tạo block pool
     block_pool = []
-    blocks_per_icon = total_blocks_needed // len(animals)
+    blocks_per_icon = total_blocks // len(animals)
 
     for animal in animals:
-        # Đảm bảo số lượng của mỗi icon chia hết cho 3
+        # Đảm bảo mỗi loại icon có số lượng chia hết cho 3
         count = blocks_per_icon
-        if count % 3 != 0:
-            count += 3 - (count % 3)
+        while count % 3 != 0:
+            count += 1
         block_pool.extend([animal] * count)
 
-    # Đảm bảo số block trong pool không vượt quá tổng cần thiết
-    block_pool = block_pool[:total_blocks_needed]
+    # Nếu block_pool vượt quá total_blocks, cắt bớt
+    block_pool = block_pool[:total_blocks]
+
+    # Bổ sung các block trống (None) nếu thiếu
+    while len(block_pool) < total_blocks:
+        block_pool.append(None)
+
     random.shuffle(block_pool)  # Trộn ngẫu nhiên
 
     # Tạo grid (pattern) từ block_pool
-    # Lớp 1
     layer_1 = [[block_pool.pop() for _ in range(cols)] for _ in range(rows)]
-
-    # Lớp 2 (ít block hơn để tạo cảm giác chồng)
-    layer_2 = [[block_pool.pop() if random.random() > 0.5 else None for _ in range(cols)] for _ in range(rows)]
+    layer_2 = [[block_pool.pop() for _ in range(cols)] for _ in range(rows)]
 
     return [layer_1, layer_2]
 
@@ -68,5 +69,3 @@ hard_game_config = {
     "pattern": generate_fixed_pattern(3),  # Gọi hàm tạo pattern cho level 3
     "time_limit": 120,  # Giới hạn thời gian (giây)
 }
-
-# Các config này có thể được import từ file khác để sử dụng
