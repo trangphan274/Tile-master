@@ -86,45 +86,51 @@ class Game:
                         arranged_blocks.append(block)
         return arranged_blocks
 
-   # Phương thức trong Game class
+   
     def is_block_interactable(self, block):
-        # Lấy tất cả các block để kiểm tra
         for other in self.blocks:
-            if other.block_id != block.block_id and other.level > block.level:  # Kiểm tra nếu block này bị che khuất bởi block phía trước
+            if other.block_id != block.block_id and other.level > block.level and other.status == 1:  # Kiểm tra trạng thái
                 if pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE).colliderect(
                     pygame.Rect(other.x, other.y, BLOCK_SIZE, BLOCK_SIZE)
                 ):
-                    return False  # Block bị che khuất, không thể tương tác
+                    return False  # Block bị cản, không thể tương tác
         return True  # Block có thể tương tác
 
     def update_visibility(self):
+    # After selecting or removing blocks, ensure visibility is updated for all blocks
         for block in self.blocks:
             if block.status == 1:
+                # Update the visibility status for the block if it's not covered
                 block.visible = self.is_block_visible(block)
+                block.interactable = self.is_block_interactable(block)
 
     # Check if a block is visible (not obscured by others)
     def is_block_visible(self, block):
-        for other in self.blocks:  # Thay vì dùng `all_blocks`, sử dụng `self.blocks`
-            if other.block_id != block.block_id and other.level > block.level:
+        for other in self.blocks:
+            if other.block_id != block.block_id and other.level > block.level and other.status == 1:  # Kiểm tra trạng thái
                 if pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE).colliderect(
                     pygame.Rect(other.x, other.y, BLOCK_SIZE, BLOCK_SIZE)
                 ):
-                    return False  # Block bị che khuất, không thể hiển thị
-        return True  # Block có thể hiển thị
+                    return False  # Block bị che
+        return True  # Block không bị che
+
+    
+    
     def select_block(self, block):
         if block not in self.selected_blocks:
             self.selected_blocks.append(block)
-            block.status = 0
+            block.status = 0  # Đánh dấu block đã bị xóa
             print(f"Block {block.block_id} selected and moved to the slot.")
-            self.update_visibility()
 
-        self.match_blocks_in_slot()
+            self.update_visibility()  # Đảm bảo cập nhật trạng thái hiển thị ngay sau khi xóa
+            self.match_blocks_in_slot()  # Kiểm tra khớp block trong slot
 
-        if len(self.selected_blocks) >= self.max_selected:
-            self.game_over = True
-            print("Game Over! Slot is full.")
+            if len(self.selected_blocks) >= self.max_selected:
+                self.game_over = True
+                print("Game Over! Slot is full.")
 
         self.check_win_condition()
+
 
     def match_blocks_in_slot(self):
         count = {}
