@@ -19,12 +19,13 @@ class ChessBoardUnitType:
 
 # Định nghĩa GameConfigType
 class GameConfigType:
-    def __init__(self, level_num, random_blocks, animals, blocks, pattern):
+    def __init__(self, level_num, random_blocks, animals, blocks, pattern, layer_offsets=None):
         self.level_num = level_num  # Lưu trữ level
         self.random_blocks = random_blocks
         self.animals = animals
         self.blocks = blocks
         self.pattern = pattern  # Lưu trữ pattern của level# Định nghĩa SkillType
+        self.layer_offsets= layer_offsets if layer_offsets is not None else[]
 class SkillType:
     def __init__(self, name: str, desc: str, icon: str, action: Callable):
         self.name = name  # Tên kỹ năng

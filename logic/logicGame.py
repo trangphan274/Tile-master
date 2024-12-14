@@ -5,17 +5,32 @@ from logic.typeGame import BlockType, GameConfigType
 GRID_COLS = 8
 GRID_ROWS = 6
 BLOCK_SIZE = 50
-LAYER_X_OFFSET = BLOCK_SIZE // 4  # Lệch ngang giữa các lớp
+LAYER_X_OFFSET = BLOCK_SIZE //10  # Lệch ngang giữa các lớp
 LAYER_Y_OFFSET = BLOCK_SIZE // 2  # Lệch dọc giữa các lớp
 
 def dict_to_game_config(config_dict):
+    # Lấy số lớp từ pattern
+    num_layers = len(config_dict["pattern"])
+    
+    # Kiểm tra và khởi tạo layer_offsets nếu chưa tồn tại
+    if "layer_offsets" not in config_dict:
+        config_dict["layer_offsets"] = []  # Tạo mảng rỗng nếu chưa có
+
+    # Đảm bảo layer_offsets đủ số lớp, thêm giá trị mặc định nếu cần
+    config_dict["layer_offsets"] += [{"x_offset": 0, "y_offset": 0}] * (num_layers - len(config_dict["layer_offsets"]))
+    
     return GameConfigType(
         level_num=config_dict["level"],
         random_blocks=config_dict.get("randomBlocks", False),
-        animals=["Resources/block_icon/alien.jpg", "Resources/block_icon/cheese.png", "Resources/block_icon/coffee.png", "Resources/block_icon/cream.png"],  # Truyền danh sách động vật vào đây
+        animals=config_dict.get("animals", []),  # Truyền danh sách động vật vào đây
         blocks=[],  # Danh sách blocks trống
-        pattern=config_dict["pattern"]
+        pattern=config_dict["pattern"],
+        layer_offsets=config_dict["layer_offsets"]  # Đảm bảo layer_offsets đã được cập nhật
     )
+
+
+
+
 
 def calculate_blocks_from_pattern(pattern):
     total_blocks = 0
@@ -65,11 +80,13 @@ class Game:
 
     def arrange_blocks(self, blocks, game_config: GameConfigType):
         arranged_blocks = []
-        PADDING = 30 # khoảng cách giữa các block
-        layer_height = BLOCK_SIZE //2  # Khoảng cách giữa các lớp
+        PADDING = 30  # Khoảng cách giữa các block
 
-        for level in range(len(game_config.pattern)):  # Duyệt qua từng lớp
-            pattern_layer = game_config.pattern[level]
+        for level, pattern_layer in enumerate(game_config.pattern):
+            # Lấy độ lệch riêng cho từng lớp
+            x_offset = game_config.layer_offsets[level]["x_offset"]
+            y_offset = game_config.layer_offsets[level]["y_offset"]
+
             for row_idx, row in enumerate(pattern_layer):
                 for col_idx, cell in enumerate(row):
                     if cell:  # Nếu ô này có block
@@ -77,14 +94,18 @@ class Game:
                             raise ValueError("Số lượng block không đủ cho pattern!")
                         block = blocks.pop()
 
-                        # Tính toán vị trí trong lưới
-                        block.x = col_idx * (BLOCK_SIZE + PADDING)+ + level * LAYER_X_OFFSET
-                        block.y = row_idx * (BLOCK_SIZE + PADDING) + + level * LAYER_Y_OFFSET
+                        # Tính toán vị trí dựa trên độ lệch của từng lớp
+                        block.x = col_idx * (BLOCK_SIZE + PADDING) + x_offset
+                        block.y = row_idx * (BLOCK_SIZE + PADDING) + y_offset
                         block.level = level  # Lớp hiện tại
                         block.type_ = cell  # Loại block lấy từ pattern
 
                         arranged_blocks.append(block)
         return arranged_blocks
+
+
+
+
 
    
     def is_block_interactable(self, block):

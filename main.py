@@ -39,9 +39,20 @@ def draw_blocks_with_images():
     for block in sorted(game.blocks, key=lambda b: (b.level, b.y, b.x)):
         if block.is_removed:
             continue
-
+# vị trí block
         rect = pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE)
         animal_image = animal_images.get(block.type_)
+# thêm đổ bóng 
+        shadow_offset = 5
+        shadow_color = (100, 100, 100, 100)  # Màu xám nhạt với độ trong suốt
+        shadow_rect = rect.move(shadow_offset, shadow_offset)
+        shadow_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
+        pygame.draw.rect(shadow_surface, shadow_color, (0, 0, BLOCK_SIZE, BLOCK_SIZE), border_radius=8)
+        screen.blit(shadow_surface, shadow_rect.topleft)
+
+# # Vẽ viền block 
+#         border_color = (0, 0, 0)  # Màu viền 
+#         pygame.draw.rect(screen, border_color, rect, width=3, border_radius=8)
 
         if animal_image:
             animal_image.set_alpha(100 if not game.is_block_visible(block) else 255)
