@@ -6,7 +6,7 @@ from logic.levelsGame import easy_game_config, middle_game_config, hard_game_con
 # Configuration parameters
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-WHITE = (255, 255, 255)
+WHITE = (245, 220, 185) # màu nền
 GRAY = (50, 50, 50)
 BUTTON_COLOR = (70, 130, 180)
 TEXT_COLOR = (255, 255, 255)
@@ -14,13 +14,13 @@ BUTTON_HOVER = (100, 149, 237)
 FONT_SIZE = 36
 BLOCK_SIZE = 50
 
-# Initialize Pygame
+
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Sheep A Sheep")
 font = pygame.font.SysFont(None, FONT_SIZE)
 
-# Load animal images
+
 animals = {
     "Resources/block_icon/alien.jpg": pygame.image.load("Resources/block_icon/alien.jpg"),
     "Resources/block_icon/cheese.png": pygame.image.load("Resources/block_icon/cheese.png"),
@@ -29,10 +29,8 @@ animals = {
 }
 animal_images = {name: pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE)) for name, image in animals.items()}
 
-# Initialize Game with default config
+# bắt đầu game (default)
 game = None
-
-
 
 # Draw blocks with visibility effects
 def draw_blocks_with_images():
@@ -44,21 +42,34 @@ def draw_blocks_with_images():
 # vị trí block
         rect = pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE)
         animal_image = animal_images.get(block.type_)
-# thêm đổ bóng 
+#  đổ bóng nè
         shadow_offset = 5
         shadow_color = (100, 100, 100, 100)  # Màu xám nhạt với độ trong suốt
         shadow_rect = rect.move(shadow_offset, shadow_offset)
         shadow_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
-        pygame.draw.rect(shadow_surface, shadow_color, (0, 0, BLOCK_SIZE, BLOCK_SIZE), border_radius=8)
+        pygame.draw.rect(shadow_surface, shadow_color, (0, 0, BLOCK_SIZE, BLOCK_SIZE), border_radius=8) 
         screen.blit(shadow_surface, shadow_rect.topleft)
 
-# # Vẽ viền block 
-#         border_color = (0, 0, 0)  # Màu viền 
-#         pygame.draw.rect(screen, border_color, rect, width=3, border_radius=8)
 
+# Vẽ viền block 
         if animal_image:
+        # Điều chỉnh độ trong suốt ảnh tùy theo trạng thái
             animal_image.set_alpha(100 if not game.is_block_visible(block) else 255)
-            screen.blit(animal_image, rect.topleft)
+            animal_image = pygame.transform.smoothscale(animal_image, (BLOCK_SIZE, BLOCK_SIZE))
+        # Tạo surface để chứa ảnh đã bo góc
+            image_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
+            image_surface.blit(animal_image, (0, 0))
+
+        # Tạo mask bo góc
+            mask = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
+            pygame.draw.rect(mask, (255, 255, 255), (0, 0, BLOCK_SIZE, BLOCK_SIZE), border_radius=8)
+            image_surface.blit(mask, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+
+            # Vẽ ảnh 
+            screen.blit(image_surface, rect.topleft)
+            pygame.draw.rect(screen, (0, 0, 0), rect, width=1, border_radius=8)  # Viền và bo góc
+        # Vẽ viền cho bóng đổ
+        pygame.draw.rect(screen, (0, 0, 0), rect, width=1, border_radius=8)
 
 # Vẽ thanh ngang 
 def draw_slots():
@@ -136,7 +147,7 @@ def menu_UI(on_mode_selected):
 
         pygame.display.update()
 
-# Draw a button with hover effect
+# vẽ nút
 def draw_button(x, y, w, h, text, is_hovered=False):
     color = BUTTON_HOVER if is_hovered else BUTTON_COLOR
     pygame.draw.rect(screen, color, (x, y, w, h), border_radius=10)
@@ -144,7 +155,7 @@ def draw_button(x, y, w, h, text, is_hovered=False):
     label_rect = label.get_rect(center=(x + w // 2, y + h // 2))
     screen.blit(label, label_rect)
 
-# Handle game mode selection
+# Hchọn màn
 def on_mode_selected(mode):
     print(f"Selected mode: {mode}")
 

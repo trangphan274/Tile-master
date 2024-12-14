@@ -18,8 +18,8 @@ level_config = {
         ],
         "time_limit": 60,
         "layer_offsets":[
-            {"x_offset": 0, "y_offset": 0,"padding": 20},
-            {"x_offset": 300, "y_offset": 300,"padding": 0}
+            {"x_offset": 0, "y_offset": 0,"padding": 45},
+            {"x_offset": 0, "y_offset": 30,"padding": 45}
         ]
     },
     2: {
