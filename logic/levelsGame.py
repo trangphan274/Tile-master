@@ -18,8 +18,8 @@ level_config = {
         ],
         "time_limit": 60,
         "layer_offsets":[
-            {"x_offset": 0, "y_offset": 0},
-            {"x_offset": 300, "y_offset": 300}
+            {"x_offset": 0, "y_offset": 0,"padding": 20},
+            {"x_offset": 300, "y_offset": 300,"padding": 0}
         ]
     },
     2: {
@@ -34,8 +34,8 @@ level_config = {
         ],
         "time_limit": 90,
         "layer_offsets":[
-            {"x_offset": 0, "y_offset": 0},
-            {"x_offset": 300, "y_offset": 300},
+            {"x_offset": 0, "y_offset": 0,"padding": 20},
+            {"x_offset": 300, "y_offset": 300,"padding": 20},
            
             
         ]
@@ -63,9 +63,9 @@ level_config = {
         ],
         "time_limit": 120,
         "layer_offsets":[
-            {"x_offset": 0, "y_offset": 0},
-            {"x_offset": 10, "y_offset": 20},
-            {"x_offset": 10, "y_offset": 20},
+            {"x_offset": 0, "y_offset": 0,"padding": 20},
+            {"x_offset": 10, "y_offset": 20,"padding": 20},
+            {"x_offset": 10, "y_offset": 20,"padding": 20},
         ]
     }
 }

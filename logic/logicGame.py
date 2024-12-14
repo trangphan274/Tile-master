@@ -95,8 +95,6 @@ class Game:
 
     def arrange_blocks(self, blocks, game_config: GameConfigType):
         arranged_blocks = []
-        PADDING = 30  # Khoảng cách giữa các block
-
         #print(f"Số lượng block trước khi arrange: {len(blocks)}")  # Debug: In số lượng block
 
         for level, pattern_layer in enumerate(game_config.pattern):
@@ -107,7 +105,7 @@ class Game:
 
             x_offset = game_config.layer_offsets[level]["x_offset"]
             y_offset = game_config.layer_offsets[level]["y_offset"]
-
+            padding = game_config.layer_offsets[level].get("padding")
             for row_idx, row in enumerate(pattern_layer):
                 for col_idx, cell in enumerate(row):
                     if cell:  # Nếu ô này có block
@@ -115,8 +113,8 @@ class Game:
                             raise ValueError("Số lượng block không đủ cho pattern!")
                         block = blocks.pop()
 
-                        block.x = col_idx * (BLOCK_SIZE + PADDING) + x_offset
-                        block.y = row_idx * (BLOCK_SIZE + PADDING) + y_offset
+                        block.x = col_idx * (BLOCK_SIZE + padding) + x_offset
+                        block.y = row_idx * (BLOCK_SIZE + padding) + y_offset
 
                         block.level = level  # Lớp hiện tại
                         block.type_ = cell  # Loại block lấy từ pattern
