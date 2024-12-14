@@ -11,21 +11,26 @@ class BlockType:
         self.status = status  # Trạng thái của khối
         self.higher_than_blocks = []  # Các khối nằm trên khối này
         self.lower_than_blocks = []  # Các khối nằm dưới khối này
+        self.visible = True
+        self.is_removed = False  # Trạng thái đã xóa
 
 # Định nghĩa ChessBoardUnitType
 class ChessBoardUnitType:
     def __init__(self):
         self.blocks: List[BlockType] = []  # Danh sách các khối trong ô này
 
-# Định nghĩa GameConfigType
 class GameConfigType:
     def __init__(self, level_num, random_blocks, animals, blocks, pattern, layer_offsets=None):
         self.level_num = level_num  # Lưu trữ level
         self.random_blocks = random_blocks
         self.animals = animals
         self.blocks = blocks
-        self.pattern = pattern  # Lưu trữ pattern của level# Định nghĩa SkillType
-        self.layer_offsets= layer_offsets if layer_offsets is not None else[]
+        self.pattern = pattern  # Lưu trữ pattern của level
+        # Nếu không có layer_offsets, tạo mặc định với các x_offset và y_offset
+        self.layer_offsets = layer_offsets if layer_offsets is not None else [{"x_offset": 0, "y_offset": 0} for _ in range(len(pattern))]
+
+
+
 class SkillType:
     def __init__(self, name: str, desc: str, icon: str, action: Callable):
         self.name = name  # Tên kỹ năng

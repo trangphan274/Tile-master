@@ -39,6 +39,8 @@ def draw_blocks_with_images():
     for block in sorted(game.blocks, key=lambda b: (b.level, b.y, b.x)):
         if block.is_removed:
             continue
+        
+    
 # vị trí block
         rect = pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE)
         animal_image = animal_images.get(block.type_)
@@ -156,6 +158,8 @@ def on_mode_selected(mode):
     global game
     game = Game(game_config=dict_to_game_config(game_config))
     print(f"Game initialized with {len(game.blocks)} blocks.")
+    
+    
 # Run the menu
 menu_UI(on_mode_selected)
 
