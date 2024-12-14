@@ -12,7 +12,7 @@ def dict_to_game_config(config_dict):
     return GameConfigType(
         level_num=config_dict["level"],
         random_blocks=config_dict.get("randomBlocks", False),
-        animals=["bird.png", "dog.png", "tree.png", "turtle.png"],  # Truyền danh sách động vật vào đây
+        animals=["Resources/block_icon/alien.jpg", "Resources/block_icon/cheese.png", "Resources/block_icon/coffee.png", "Resources/block_icon/cream.png"],  # Truyền danh sách động vật vào đây
         blocks=[],  # Danh sách blocks trống
         pattern=config_dict["pattern"]
     )

@@ -1,7 +1,7 @@
 import random
 
 # Danh sách động vật
-animals = ["bird.png", "dog.png", "tree.png", "turtle.png"]
+animals = ["Resources/block_icon/alien.jpg", "Resources/block_icon/cheese.png", "Resources/block_icon/coffee.png", "Resources/block_icon/cream.png"]
 
 # Hàm tạo pattern cố định cho mỗi màn
 def generate_fixed_pattern(level):

@@ -22,10 +22,10 @@ font = pygame.font.SysFont(None, FONT_SIZE)
 
 # Load animal images
 animals = {
-    "turtle.png": pygame.image.load("turtle.png"),
-    "dog.png": pygame.image.load("dog.png"),
-    "tree.png": pygame.image.load("tree.png"),
-    "bird.png": pygame.image.load("bird.png")
+    "Resources/block_icon/alien.jpg": pygame.image.load("Resources/block_icon/alien.jpg"),
+    "Resources/block_icon/cheese.png": pygame.image.load("Resources/block_icon/cheese.png"),
+    "Resources/block_icon/coffee.png": pygame.image.load("Resources/block_icon/coffee.png"),
+    "Resources/block_icon/cream.png": pygame.image.load("Resources/block_icon/cream.png")
 }
 animal_images = {name: pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE)) for name, image in animals.items()}
 
@@ -47,11 +47,11 @@ def draw_blocks_with_images():
             animal_image.set_alpha(100 if not game.is_block_visible(block) else 255)
             screen.blit(animal_image, rect.topleft)
 
-# Draw slots at the bottom of the screen
+# Vẽ thanh ngang 
 def draw_slots():
     slot_width = 50
     for i in range(7):
-        x = 100 + i * (slot_width + 10)
+        x = 100 + i * (slot_width + 5)
         y = SCREEN_HEIGHT - 100
         pygame.draw.rect(screen, GRAY, (x, y, slot_width, slot_width))
         if i < len(game.selected_blocks):
