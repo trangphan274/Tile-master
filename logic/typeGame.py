@@ -3,7 +3,7 @@ from typing import List, Callable
 # Định nghĩa BlockType
 class BlockType:
     def __init__(self, block_id: int, x: int, y: int, level: int, type_: str, status: int):
-        self.id = block_id  # ID của khối
+        self.block_id  = block_id  # ID của khối
         self.x = x          # Vị trí X
         self.y = y          # Vị trí Y
         self.level = level  # Cấp độ của khối
@@ -37,13 +37,3 @@ class SkillType:
         self.desc = desc  # Mô tả kỹ năng
         self.icon = icon  # Biểu tượng kỹ năng
         self.action = action  # Hành động của kỹ năng (hàm)
-class BlockType:
-    def __init__(self, block_id, x, y, level, type_, status):
-        self.block_id = block_id
-        self.x = x
-        self.y = y
-        self.level = level
-        self.type = type_  # Loại hình (ví dụ: 'turtle.png', 'dog.png')
-        self.status = status
-        self.visible = True
-        self.is_removed = False  # Trạng thái đã xóa
