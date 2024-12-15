@@ -1,6 +1,7 @@
 import random
 import pygame 
 from logic.typeGame import BlockType, GameConfigType
+from logic.assets import BLOCKS_PIC
 
 GRID_COLS = 8
 GRID_ROWS = 6
@@ -8,10 +9,7 @@ BLOCK_SIZE = 50
 
 
 def dict_to_game_config(config_dict):
-    # Lấy số lớp từ pattern
-    num_layers = len(config_dict["pattern"])
-    
-    # Kiểm tra và khởi tạo layer_offsets nếu chưa tồn tại
+    num_layers = len(config_dict["pattern"])    
     if "layer_offsets" not in config_dict:
         config_dict["layer_offsets"] = [{"x_offset": 0, "y_offset": 0}] * num_layers
 
@@ -23,30 +21,30 @@ def dict_to_game_config(config_dict):
     return GameConfigType(
         level_num=config_dict["level"],
         random_blocks=config_dict.get("random_blocks", []),
-        animals=config_dict.get("animals", ["Resources/block_icon/alien.jpg", "Resources/block_icon/cheese.png", "Resources/block_icon/coffee.png", "Resources/block_icon/cream.png"]),
-        blocks=[],  # Danh sách blocks trống
+        block_pic=list(BLOCKS_PIC.keys()),
+        blocks=[],  
         pattern=config_dict["pattern"],
-        layer_offsets=config_dict["layer_offsets"],  # Đảm bảo layer_offsets đã được cập nhật
+        layer_offsets=config_dict["layer_offsets"],  #  layer_offsets đã được cập nhật
     )
 
 def calculate_blocks_from_pattern(pattern):
     total_blocks = 0
-    for layer in pattern:  # Duyệt qua từng lớp
-        for row in layer:  # Duyệt qua từng hàng
-            total_blocks += len(row)  # Đếm tổng số ô trong mỗi hàng
+    for layer in pattern:  
+        for row in layer:  
+            total_blocks += len(row)  
     return total_blocks
 
 class Game:
     def __init__(self, game_config: GameConfigType):
-        # Cập nhật số lượng block theo số block của pattern
+        
         self.num_blocks = calculate_blocks_from_pattern(game_config.pattern)
         self.current_score = 0
         self.game_over = False
         self.blocks = game_config.blocks
         self.selected_blocks = []
-        self.max_selected = 5  # Giới hạn số block chọn
+        self.max_selected = 5  
         self.level_num = game_config.level_num
-        self.block_types = game_config.animals
+        self.block_types = game_config.block_pic
         self.layer_offsets = game_config.layer_offsets
         
         # Lưu x_offset và y_offset từ layer_offsets
@@ -54,7 +52,7 @@ class Game:
         self.y_offset = [layer["y_offset"] for layer in game_config.layer_offsets]
         
         self.build_game(game_config)
-  # gọi hàm này để tạo 5 game từ các block đã xếp
+
 
     def is_win(self):
         return all(block.status == 0 for block in self.blocks)
@@ -69,11 +67,11 @@ class Game:
     def generate_blocks(self, game_config: GameConfigType):
         total_blocks = calculate_blocks_from_pattern(game_config.pattern)
         blocks = []
-        block_types = game_config.animals
+        block_types = game_config.block_pic
         
         # Kiểm tra nếu animals bị rỗng
         if not block_types:
-            raise ValueError("Danh sách animals không được rỗng!")
+            raise ValueError("Danh sách hình block không được rỗng!")
 
         for i in range(total_blocks):  # Tạo block theo số lượng từ pattern
             block = BlockType(

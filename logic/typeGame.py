@@ -14,20 +14,20 @@ class BlockType:
         self.visible = True
         self.is_removed = False  # Trạng thái đã xóa
 
-# Định nghĩa ChessBoardUnitType
-class ChessBoardUnitType:
-    def __init__(self):
-        self.blocks: List[BlockType] = []  # Danh sách các khối trong ô này
-
 class GameConfigType:
-    def __init__(self, level_num, random_blocks, animals, blocks, pattern, layer_offsets=None):
+    def __init__(self, level_num, random_blocks, block_pic, blocks, pattern, layer_offsets=None):
         self.level_num = level_num  # Lưu trữ level
         self.random_blocks = random_blocks
-        self.animals = animals
+        self.block_pic = block_pic 
         self.blocks = blocks
         self.pattern = pattern  # Lưu trữ pattern của level
         # Nếu không có layer_offsets, tạo mặc định với các x_offset và y_offset
         self.layer_offsets = layer_offsets if layer_offsets is not None else [{"x_offset": 0, "y_offset": 0} for _ in range(len(pattern))]
+
+
+class ChessBoardUnitType:
+    def __init__(self):
+        self.blocks: List[BlockType] = []  # Danh sách các khối trong ô này
 
 
 

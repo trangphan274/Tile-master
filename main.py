@@ -2,6 +2,8 @@ import pygame
 import sys
 from logic.logicGame import Game, dict_to_game_config
 from logic.levelsGame import easy_game_config, middle_game_config, hard_game_config
+from logic.assets import BLOCKS_PIC_LOADED
+
 
 # Configuration parameters
 SCREEN_WIDTH = 800
@@ -21,13 +23,8 @@ pygame.display.set_caption("Sheep A Sheep")
 font = pygame.font.SysFont(None, FONT_SIZE)
 
 
-animals = {
-    "Resources/block_icon/alien.jpg": pygame.image.load("Resources/block_icon/alien.jpg"),
-    "Resources/block_icon/cheese.png": pygame.image.load("Resources/block_icon/cheese.png"),
-    "Resources/block_icon/coffee.png": pygame.image.load("Resources/block_icon/coffee.png"),
-    "Resources/block_icon/cream.png": pygame.image.load("Resources/block_icon/cream.png")
-}
-animal_images = {name: pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE)) for name, image in animals.items()}
+
+animal_images = {name: pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE)) for name, image in BLOCKS_PIC_LOADED.items()}
 
 # bắt đầu game (default)
 game = None
@@ -45,7 +42,11 @@ def draw_blocks_with_images():
             BLOCK_SIZE,
             BLOCK_SIZE
         )
+        block.type_ = block.type_.split('/')[-1].split('.')[0]
         animal_image = animal_images.get(block.type_)
+        if not animal_image:
+            print(f"Error: No image found for block type {block.type_}")
+            continue
 
         # Đổ bóng
         shadow_offset = 5
