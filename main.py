@@ -37,46 +37,55 @@ def draw_blocks_with_images():
     for block in sorted(game.blocks, key=lambda b: (b.level, b.y, b.x)):
         if block.is_removed:
             continue
-        
-    
-# vị trí block
-        rect = pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE)
+
+        # Cập nhật vị trí block theo grid_offset
+        rect = pygame.Rect(
+            block.x + grid_offset[0],  # Thêm offset vào tọa độ x
+            block.y + grid_offset[1],  # Thêm offset vào tọa độ y
+            BLOCK_SIZE,
+            BLOCK_SIZE
+        )
         animal_image = animal_images.get(block.type_)
-#  đổ bóng nè
+
+        # Đổ bóng
         shadow_offset = 5
         shadow_color = (100, 100, 100, 100)  # Màu xám nhạt với độ trong suốt
         shadow_rect = rect.move(shadow_offset, shadow_offset)
         shadow_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
-        pygame.draw.rect(shadow_surface, shadow_color, (0, 0, BLOCK_SIZE, BLOCK_SIZE), border_radius=8) 
+        pygame.draw.rect(shadow_surface, shadow_color, (0, 0, BLOCK_SIZE, BLOCK_SIZE), border_radius=8)
         screen.blit(shadow_surface, shadow_rect.topleft)
 
-
-# Vẽ viền block 
+        # Vẽ hình ảnh block
         if animal_image:
-        # Điều chỉnh độ trong suốt ảnh tùy theo trạng thái
             animal_image.set_alpha(100 if not game.is_block_visible(block) else 255)
             animal_image = pygame.transform.smoothscale(animal_image, (BLOCK_SIZE, BLOCK_SIZE))
-        # Tạo surface để chứa ảnh đã bo góc
+
+            # Tạo surface để chứa ảnh đã bo góc
             image_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
             image_surface.blit(animal_image, (0, 0))
 
-        # Tạo mask bo góc
+            # Tạo mask bo góc
             mask = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
             pygame.draw.rect(mask, (255, 255, 255), (0, 0, BLOCK_SIZE, BLOCK_SIZE), border_radius=8)
             image_surface.blit(mask, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
 
-            # Vẽ ảnh 
+            # Vẽ ảnh
             screen.blit(image_surface, rect.topleft)
             pygame.draw.rect(screen, (0, 0, 0), rect, width=1, border_radius=8)  # Viền và bo góc
-        # Vẽ viền cho bóng đổ
+
+        # Vẽ viền đen cho bóng đổ
         pygame.draw.rect(screen, (0, 0, 0), rect, width=1, border_radius=8)
 
 # Vẽ thanh ngang 
-def draw_slots():
-    slot_width = 50
+def draw_bottom_bar():
+    slot_width = 50  # Kích thước của mỗi slot
+    slot_spacing = 5  # Khoảng cách giữa các slot
+    total_width = 7 * slot_width + 6 * slot_spacing  # Tổng chiều rộng của thanh ngang
+    start_x = (SCREEN_WIDTH - total_width) // 2  # Căn giữa theo chiều ngang
+    y = SCREEN_HEIGHT - 100  # Vị trí theo chiều dọc (giữ nguyên)
+
     for i in range(7):
-        x = 100 + i * (slot_width + 5)
-        y = SCREEN_HEIGHT - 100
+        x = start_x + i * (slot_width + slot_spacing)
         pygame.draw.rect(screen, GRAY, (x, y, slot_width, slot_width))
         if i < len(game.selected_blocks):
             block = game.selected_blocks[i]
@@ -90,12 +99,28 @@ def handle_block_click(pos):
         if block.is_removed or not game.is_block_interactable(block):  # Gọi phương thức từ đối tượng game
             continue  # Bỏ qua nếu block bị xóa hoặc không thể tương tác
 
-        rect = pygame.Rect(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE)
+        rect = pygame.Rect(block.x + grid_offset[0], block.y + grid_offset[1], BLOCK_SIZE, BLOCK_SIZE)
+
         if rect.collidepoint(pos):  # Nếu người chơi click vào block này
             game.select_block(block)
             block.is_removed = True
             break
 
+
+
+def center_grid():
+    global grid_offset
+    # Tính kích thước grid
+    grid_width = max(block.x for block in game.blocks) + BLOCK_SIZE
+    grid_height = max(block.y for block in game.blocks) + BLOCK_SIZE
+    min_x = min(block.x for block in game.blocks)
+    min_y = min(block.y for block in game.blocks)
+
+    # Tính offset để căn giữa
+    grid_offset = [
+        (SCREEN_WIDTH - (grid_width - min_x)) // 2 - min_x,
+        (SCREEN_HEIGHT - (grid_height - min_y)) // 2 - min_y
+    ]
 
 # Check win/lose conditions
 def check_win_lose():
@@ -158,7 +183,6 @@ def draw_button(x, y, w, h, text, is_hovered=False):
 # Hchọn màn
 def on_mode_selected(mode):
     print(f"Selected mode: {mode}")
-
     if mode == "easy":
         game_config = easy_game_config
     elif mode == "medium":
@@ -169,7 +193,20 @@ def on_mode_selected(mode):
     global game
     game = Game(game_config=dict_to_game_config(game_config))
     print(f"Game initialized with {len(game.blocks)} blocks.")
-    
+    center_grid()
+
+def draw_play_area_border():
+    # Xác định giới hạn khu vực chơi dựa trên các block
+    if not game.blocks:
+        return  # Nếu chưa có block, không vẽ
+
+    # Lấy giới hạn x và y từ các block
+    min_x = min(block.x for block in game.blocks)
+    max_x = max(block.x for block in game.blocks) + BLOCK_SIZE
+    min_y = min(block.y for block in game.blocks)
+    max_y = max(block.y for block in game.blocks) + BLOCK_SIZE
+
+   
     
 # Run the menu
 menu_UI(on_mode_selected)
@@ -185,9 +222,9 @@ running = True
 while running:
     screen.fill(WHITE)
 
-    # Draw blocks and slots
+    draw_play_area_border() 
     draw_blocks_with_images()
-    draw_slots()
+    draw_bottom_bar()
 
     # Handle events
     for event in pygame.event.get():
