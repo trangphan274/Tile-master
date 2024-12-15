@@ -6,8 +6,8 @@ from logic.assets import BLOCKS_PIC_LOADED
 
 
 # Configuration parameters
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 800
 WHITE = (245, 220, 185) # màu nền
 GRAY = (50, 50, 50)
 BUTTON_COLOR = (70, 130, 180)
@@ -119,8 +119,8 @@ def center_grid():
 
     # Tính offset để căn giữa
     grid_offset = [
-        (SCREEN_WIDTH - (grid_width - min_x)) // 2 - min_x,
-        (SCREEN_HEIGHT - (grid_height - min_y)) // 2 - min_y
+        (SCREEN_WIDTH - grid_width) // 2 - min_x,  # Đảm bảo grid căn giữa đúng
+        (SCREEN_HEIGHT - grid_height) // 2 - min_y
     ]
 
 # Check win/lose conditions
@@ -201,12 +201,7 @@ def draw_play_area_border():
     if not game.blocks:
         return  # Nếu chưa có block, không vẽ
 
-    # Lấy giới hạn x và y từ các block
-    min_x = min(block.x for block in game.blocks)
-    max_x = max(block.x for block in game.blocks) + BLOCK_SIZE
-    min_y = min(block.y for block in game.blocks)
-    max_y = max(block.y for block in game.blocks) + BLOCK_SIZE
-
+   
    
     
 # Run the menu

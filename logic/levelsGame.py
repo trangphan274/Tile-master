@@ -25,114 +25,155 @@ level_config = {
     },
     2: {
         "pattern": [
-            [[1, 0, 1, 1, 0, 1],  # Layer 1: 20
-             [0, 0, 1, 1, 0, 0],
-             [0, 1, 0, 0, 1, 0],
-             [1, 1, 0, 0, 1, 1],
-             [0, 1, 1, 1, 1, 0],
-             [0, 0, 1, 1, 0, 0],
-             [0, 0, 1, 1, 0, 0],
-             ],
-            [[0, 0, 1, 1, 0, 0],  # Layer 2: 22 
-             [0, 1, 1, 1, 1, 0],
-             [0, 1, 0, 0, 1, 0],
-             [1, 1, 0, 0, 1, 1],
+            [[0, 1, 1, 1, 1, 0],  # head
+             [1, 1, 1, 1, 1, 1],
              [0, 1, 1, 1, 1, 0],
              [0, 1, 1, 1, 1, 0],
              [0, 0, 1, 1, 0, 0],
-             ],
-            [[1, 1, 1, 1, 1, 1],  # Layer 3
-             [1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1],
+             [0, 0, 1, 1, 0, 0],
+             [0, 0, 1, 1, 0, 0],
             ],
-            [[0, 0, 0, 0, 0, 1],  # Layer 4
-             [1, 0, 0, 0, 0, 1],
-             [1, 0, 0, 0, 0, 1],
-             [1, 0, 0, 0, 0, 1],
-             [1, 0, 0, 0, 0, 1],
-             [1, 0, 0, 0, 0, 1],
+            [[0, 1, 1, 1, 1, 1],  # body 1
+             [0, 1, 1, 1, 1, 1],
+             [0, 1, 1, 1, 1, 1],
+             [0, 1, 1, 1, 1, 1],
+             [0, 1, 1, 1, 1, 1],
+             [0, 1, 1, 1, 1, 1],
+             [0, 1, 1, 0, 1, 1],
+            ],
+            [[1, 1, 1, 1, 1, 1, 1, 1],  # body 2
+             [1, 1, 1, 1, 1, 1, 1, 1],
+             [1, 1, 1, 1, 1, 1, 1, 1],
+             [1, 1, 1, 1, 1, 1, 1, 1],
+             [1, 1, 1, 1, 1, 1, 1, 1],
+             [1, 1, 1, 1, 1, 1, 1, 1],
+            ],
+           
+            [ #hand
+             [0, 0, 0, 0, 0, 0],
              [1, 0, 0, 0, 0, 0],
+             [1, 0, 0, 0, 0, 0],
+             [1, 0, 0, 0, 0, 0],
+             [1, 0, 0, 0, 0, 0],
+            ],
+            [ #hand
+             [0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 1],
+             [0, 0, 0, 0, 0, 1],
+             [0, 0, 0, 0, 0, 1],
+             [0, 0, 0, 0, 0, 1],
             ]
+             
+             
+             
              
         ],
         "time_limit": 90,
         "layer_offsets":[
-            {"x_offset": 0, "y_offset": 0,"padding": 0},
-            {"x_offset": 0, "y_offset": 0,"padding": 0},
-            {"x_offset": 0, "y_offset": 0,"padding": 0},
-            {"x_offset": 0, "y_offset": 0,"padding": 0},
+            {"x_offset": 130, "y_offset": 180,"padding": 0}, 
+            {"x_offset": 110, "y_offset": 420,"padding": 0},
+            {"x_offset": 85, "y_offset": 350,"padding": 0},  
+            
+            {"x_offset": 10, "y_offset": 300,"padding": 50},
+            {"x_offset": 10, "y_offset": 300,"padding": 50},
            
             
         ]
     },
     3: {
         "pattern": [
-            [[1, 1, 1, 1, 1, 1],  # Layer 1
-             [1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1]],
-            [[1, 1, 1, 1, 1, 1],  # Layer 2
-             [1, 0, 0, 0, 0, 1],
-             [1, 0, 1, 1, 0, 1],
-             [1, 0, 1, 1, 0, 1],
-             [1, 0, 0, 0, 0, 1],
-             [1, 1, 1, 1, 1, 1]],
-            [[0, 0, 1, 1, 0, 0],  # Layer 3
-             [0, 1, 1, 1, 1, 0],
-             [1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1],
-             [0, 1, 1, 1, 1, 0],
-             [0, 0, 1, 1, 0, 0]]
+            [
+             [1, 0, 0, 0, 0, 0, 0, 1],
+             [1, 1, 1, 0, 0, 1, 1, 1],  # Layer bottom: 48
+             [1, 1, 1, 0, 0, 1, 1, 1],
+             [1, 1, 1, 1, 1, 1, 1, 1],
+             [1, 1, 1, 1, 1, 1, 1, 1],
+             [1, 1, 1, 1, 1, 1, 1, 1],
+             [0, 1, 1, 1, 1, 1, 1, 0],
+             [0, 0, 1, 1, 1, 1, 0, 0],
+
+             ],
+
+            [
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 1, 1, 0, 0, 0, 1, 1],  # Layer 36
+             [0, 1, 1, 0, 0, 0, 1, 1],
+             [0, 1, 1, 1, 1, 1, 1, 1],
+             [0, 1, 1, 1, 1, 1, 1, 1],
+             [0, 1, 1, 1, 1, 1, 1, 1],
+             [0, 0, 1, 1, 1, 1, 1, 0],
+             [0, 0, 0, 1, 1, 0, 0, 0],
+             ],
+             [
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 1, 0, 0, 0, 0, 1, 0],
+             [0, 1, 1, 0, 0, 1, 1, 0],
+             [0, 1, 1, 1, 1, 1, 1, 0],
+             [0, 1, 1, 1, 1, 1, 1, 0],
+             [0, 0, 1, 1, 1, 1, 0, 0],
+             [0, 0, 0, 1, 1, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             ],
+             [
+             [0, 0, 0, 0, 0, 0, 0, 0], #12
+             [0, 0, 0, 0, 0, 0, 0, 0], # top
+             [0, 0, 1, 0, 0, 1, 0, 0],
+             [0, 0, 1, 1, 1, 1, 0, 0],
+             [0, 0, 1, 1, 1, 1, 0, 0],
+             [0, 0, 0, 1, 1, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             ]
+
         ],
-        "time_limit": 120,
+        "time_limit": 300,
         "layer_offsets":[
-            {"x_offset": 0, "y_offset": 0,"padding": 20},
-            {"x_offset": 10, "y_offset": 20,"padding": 20},
-            {"x_offset": 10, "y_offset": 20,"padding": 20},
+            {"x_offset": 10, "y_offset": 10,"padding": 10},
+            {"x_offset": 30, "y_offset": 50,"padding": 0},
+            {"x_offset": 50, "y_offset": 55,"padding": 0},
+            {"x_offset": 40, "y_offset": 80,"padding": 3}
         ]
     }
 }
 
-#  block pool dựa trên tổng số block cần để full đủ bảng
+#  block pool 
 def create_block_pool(total_blocks, level):
     if not block_pic:
-        raise ValueError("The  list is empty!")
+        raise ValueError("The block_pic list is empty!")
     
-
+    # Đặt số icon dựa trên level
     if level == 1:
         num_icons = 3
     elif level == 2:
-        num_icons = 9
+        num_icons = min(11, total_blocks // 3)  # Giới hạn  lai num_icons 
     elif level == 3:
-        num_icons = 12
+        num_icons = min(15, total_blocks // 3)  
     else:
-        num_icons = len(block_pic)
+        num_icons = min(len(block_pic), total_blocks // 3)
 
     block_pool = []
-    blocks_per_icon = total_blocks // num_icons
+    blocks_per_icon = (total_blocks // 3) // num_icons * 3  # bội 3
 
-    # Phân phối icon vào block pool
+    # Phân phối icon 
     for i in range(num_icons):
-        animal = block_pic[i % len(block_pic)]  # Đảm bảo không vượt quá số icon có sẵn
-        count = blocks_per_icon
-        block_pool.extend([animal] * count)
+        animal = block_pic[i % len(block_pic)]
+        block_pool.extend([animal] * blocks_per_icon)
 
+    # Tính số dư còn thiếu
+    current_blocks = len(block_pool)
+    missing_blocks = total_blocks - current_blocks
 
-    # Tính số dư còn thiếu để thành bội của 3
-    missing_blocks = total_blocks - len(block_pool)
-
-# Chỉ thêm đúng số dư còn thiếu
+    # Bổ sung các block dư theo bội số của 3
     if missing_blocks > 0:
-        for _ in range(missing_blocks):
-            block_pool.append(random.choice(block_pic))
+        for i in range(0, missing_blocks, 3):
+            animal = block_pic[i % len(block_pic)]
+            block_pool.extend([animal] * 3)
 
-    # Đảm bảo danh sách đủ tổng số block và shuffle trước khi trả về
+    # Đảm bảo tổng là bội của 3
+    while len(block_pool) % 3 != 0:
+        block_pool.append(random.choice(block_pic))
+
+    # Shuffle trước khi trả về
     random.shuffle(block_pool)
     return block_pool
 
@@ -149,6 +190,24 @@ def fill_layer(shape, block_pool):
                 grid_row.append(None)
         grid.append(grid_row)
     return grid
+# shuffle khó cho 1 số màn 
+
+def shuffle_difficult(block_pool):
+    random.shuffle(block_pool)
+    new_pool= []
+    pairs =[]
+    #gom lại theo cặp 
+    while len(block_pool)>=2:
+        pair =[block_pool.pop(),block_pool.pop()]
+        pairs.append(pair)
+    # Rải cặp và block lẻ
+    for pair in pairs:
+        new_pool.extend(pair)
+        if block_pool:
+            new_pool.append(block_pool.pop())
+    # suffle lại 1 lần nữa
+    random.shuffle(new_pool)
+    return new_pool
 
 # Hàm tạo pattern cho từng level
 def generate_pattern(level):
@@ -162,7 +221,9 @@ def generate_pattern(level):
         total_blocks += 1
 
     block_pool = create_block_pool(total_blocks,level)
-
+    difficult_levels=[3]
+    if level in difficult_levels:
+        block_pool = shuffle_difficult(block_pool)
     layers = [fill_layer(shape, block_pool) for shape in pattern]
     return layers
 
