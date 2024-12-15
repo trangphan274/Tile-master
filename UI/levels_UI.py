@@ -1,5 +1,5 @@
 import pygame
-from logic.assets import BLOCKS_PIC_LOADED
+from Resources.assets import BLOCKS_PIC_LOADED
 
 
 # Configuration parameters
@@ -12,9 +12,7 @@ font = pygame.font.SysFont(None, 36)
 
 animal_images = {name: pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE)) for name, image in BLOCKS_PIC_LOADED.items()}
 
-
-
-# Draw blocks with visibility effects
+# contain visibility effects
 def draw_blocks_with_images(screen,game, grid_offset):
     for block in sorted(game.blocks, key=lambda b: (b.level, b.y, b.x)):
         if block.is_removed:
@@ -64,22 +62,39 @@ def draw_blocks_with_images(screen,game, grid_offset):
 
 
 def draw_bottom_bar(screen,game):
-    slot_width = 50  # Kích thước của mỗi slot
-    slot_spacing = 5  # Khoảng cách giữa các slot
+    
+    bottom_bar_image = pygame.image.load('Resources/bar/bottom_bar.png').convert_alpha()
+
+    slot_width = 50 
+    slot_spacing = 5
     total_width = 7 * slot_width + 6 * slot_spacing  # Tổng chiều rộng của thanh ngang
     start_x = (SCREEN_WIDTH - total_width) // 2  # Căn giữa theo chiều ngang
-    y = SCREEN_HEIGHT - 100  # Vị trí theo chiều dọc (giữ nguyên)
+    y = SCREEN_HEIGHT - 130  # Vị trí theo chiều dọc (giữ nguyên)
+
+    # Thêm con mèo
+    icon_image = pygame.image.load('Resources/bar/cat_on_bar.png').convert_alpha()  # Tải icon với nền trong suốt
+    resized_icon = pygame.transform.scale(icon_image, (70, 70))
+
+    icon_x = start_x -12
+    icon_y = y -65
+    
+    screen.blit(resized_icon, (icon_x, icon_y))  # Vẽ icon lên màn hình
+     
+    bottom_bar_image = pygame.transform.scale(bottom_bar_image, (total_width +10, 65))# ép hình
+
+    screen.blit(bottom_bar_image, (start_x-5, y-10)) # nhích hình 
+    block_color = (210, 180, 140)
 
     for i in range(7):
         x = start_x + i * (slot_width + slot_spacing)
-        pygame.draw.rect(screen, GRAY, (x, y, slot_width, slot_width))
+        pygame.draw.rect(screen, block_color, (x, y, slot_width, slot_width))
         if i < len(game.selected_blocks):
             block = game.selected_blocks[i]
             animal_image = animal_images.get(block.type_)
             if animal_image:
                 screen.blit(animal_image, (x, y))
+ 
 
-# Hàm xử lý click block
 def handle_block_click(pos,game,grid_offset):
     for block in reversed(game.blocks):  # Kiểm tra các block từ trên xuống dưới
         if block.is_removed or not game.is_block_interactable(block):  # Gọi phương thức từ đối tượng game
@@ -91,8 +106,6 @@ def handle_block_click(pos,game,grid_offset):
             game.select_block(block)
             block.is_removed = True
             break
-
-
 
 def center_grid(game):
     
@@ -110,6 +123,3 @@ def center_grid(game):
     return grid_offset
     
 
-def draw_play_area_border(game):
-    if not game.blocks:
-        return

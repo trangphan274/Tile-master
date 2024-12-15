@@ -1,7 +1,7 @@
 import random
 import pygame 
 from logic.typeGame import BlockType, GameConfigType
-from logic.assets import BLOCKS_PIC
+from Resources.assets import BLOCKS_PIC
 
 GRID_COLS = 8
 GRID_ROWS = 6

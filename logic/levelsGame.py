@@ -1,6 +1,6 @@
 
 import random
-from logic.assets import BLOCKS_PIC,BLOCKS_PIC_LOADED
+from Resources.assets import BLOCKS_PIC,BLOCKS_PIC_LOADED
 
 
 #ảnh
