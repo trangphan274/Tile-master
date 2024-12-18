@@ -1,6 +1,6 @@
 import pygame
 from Resources.assets import BLOCKS_PIC_LOADED,HELPER_PIC_LOADED
-from logic.helpersGame import shuffle_blocks
+from logic.helpersGame import shuffle_blocks,triple_break,undo
 
 
 # Configuration parameters
@@ -126,28 +126,31 @@ def draw_help_buttons(screen, game):
 
     button_positions = [(start_x + i* (button_width + 5), y) for i in range(3)]
     
-   
     for i, (x, y) in enumerate(button_positions):
-        for i, (x, y) in enumerate(button_positions):
             if button_keys[i] in HELPER_PIC_LOADED:  # Đảm bảo helper button tồn tại
                 button_image = pygame.transform.scale(
                     HELPER_PIC_LOADED[button_keys[i]], (button_width, button_height)
                 )
                 screen.blit(button_image, (x, y))
+                
             else:
                 print(f"Image for button '{button_keys[i]}' not found.")
+    
+   
+
 
     # Kiểm tra sự kiện click
     if pygame.mouse.get_pressed()[0]:
         mouse_x, mouse_y = pygame.mouse.get_pos()
         for i, (x, y) in enumerate(button_positions):
+            
             if x <= mouse_x <= x + button_width and y <= mouse_y <= y + button_height:
                 if button_keys[i] == 'shuffle':
                     shuffle_blocks(game,screen)  
-                # elif buttons[i] == 'Reset':
-                #     reset_blocks(game)   
-                # elif buttons[i] == 'Hint':
-                #     hint_blocks(game)   
+                elif button_keys[i] == 'triple':
+                    triple_break(game)
+                elif button_keys[i] == 'back':
+                    undo(game) 
 
 
 
@@ -162,5 +165,5 @@ def handle_block_click(screen,pos,game,grid_offset):
             game.select_block(block)
             block.is_removed = True
             break
-    draw_help_buttons(screen, game)
+    
 

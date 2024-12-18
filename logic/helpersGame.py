@@ -19,3 +19,24 @@ def shuffle_blocks(game: Game,screen):
     draw_blocks_with_images(screen, game, grid_offset)
 
     print("shuffled successfully!")
+def triple_break(game: Game):
+    # Tìm các nhóm 3 block cùng loại
+    from collections import Counter
+
+    remaining_blocks = [block for block in game.blocks if not block.is_removed]
+    block_groups = {}
+    
+    for block in remaining_blocks:
+        if block.type_ not in block_groups:
+            block_groups[block.type_] = []
+        block_groups[block.type_].append(block)
+    
+    # Duyệt qua các loại block và bể 3 viên cùng loại
+    for block_type, blocks in block_groups.items():
+        if len(blocks) >= 3:
+            # Chọn 3 viên để bể
+            for i in range(3):
+                blocks[i].is_removed = True
+
+    game.update_visibility()
+    
