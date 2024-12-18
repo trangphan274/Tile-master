@@ -1,4 +1,4 @@
-import random
+import random 
 from logic.logicGame import Game
 
 def shuffle_blocks(game: Game,screen):
@@ -20,23 +20,26 @@ def shuffle_blocks(game: Game,screen):
 
     print("shuffled successfully!")
 def triple_break(game: Game):
-    # Tìm các nhóm 3 block cùng loại
-    from collections import Counter
+    from random import choice
 
     remaining_blocks = [block for block in game.blocks if not block.is_removed]
     block_groups = {}
     
+    # Nhóm các block theo loại
     for block in remaining_blocks:
         if block.type_ not in block_groups:
             block_groups[block.type_] = []
         block_groups[block.type_].append(block)
+    selected_group = None
+    for group in block_groups.values():
+        if len(group) >= 3:
+            selected_group = group
+            break
     
-    # Duyệt qua các loại block và bể 3 viên cùng loại
-    for block_type, blocks in block_groups.items():
-        if len(blocks) >= 3:
-            # Chọn 3 viên để bể
-            for i in range(3):
-                blocks[i].is_removed = True
+    if selected_group:
+       
+        for i in range(3):
+            selected_group[i].is_removed = True
 
     game.update_visibility()
     

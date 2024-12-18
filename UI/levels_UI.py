@@ -1,6 +1,6 @@
 import pygame
 from Resources.assets import BLOCKS_PIC_LOADED,HELPER_PIC_LOADED
-from logic.helpersGame import shuffle_blocks,triple_break,undo
+from logic.helpersGame import shuffle_blocks,triple_break
 
 
 # Configuration parameters
@@ -115,16 +115,16 @@ def center_grid(game):
 # 
 #    
 def draw_help_buttons(screen, game):
-    button_keys=['shuffle','back','triple']
+    button_keys=['shuffle','triple']
     button_width = 80
     button_height = 40
     
     
     
-    start_x = (SCREEN_WIDTH - 3 * button_width - 2 * 5) // 2 
+    start_x = (SCREEN_WIDTH - 2 * button_width - 2 * 5) // 2 
     y = SCREEN_HEIGHT - 60  
 
-    button_positions = [(start_x + i* (button_width + 5), y) for i in range(3)]
+    button_positions = [(start_x + i* (button_width + 5), y) for i in range(2)]
     
     for i, (x, y) in enumerate(button_positions):
             if button_keys[i] in HELPER_PIC_LOADED:  # Đảm bảo helper button tồn tại
@@ -149,9 +149,7 @@ def draw_help_buttons(screen, game):
                     shuffle_blocks(game,screen)  
                 elif button_keys[i] == 'triple':
                     triple_break(game)
-                elif button_keys[i] == 'back':
-                    undo(game) 
-
+                
 
 
 def handle_block_click(screen,pos,game,grid_offset):

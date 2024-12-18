@@ -21,7 +21,6 @@ BLOCKS_PIC ={
 
 HELPER_PIC={
     "shuffle":"Resources/Helper/shuffle.png",
-    "back":"Resources/Helper/back.png",
     "triple":"Resources/Helper/magic_eye.png"
 }
 
