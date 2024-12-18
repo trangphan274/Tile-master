@@ -2,7 +2,7 @@ import pygame
 import sys
 
 from UI.menu_UI import menu_UI
-from UI.levels_UI import draw_blocks_with_images,draw_bottom_bar,handle_block_click,center_grid
+from UI.levels_UI import draw_blocks_with_images,draw_bottom_bar,handle_block_click,center_grid,draw_help_buttons
 from logic.levelsGame import easy_game_config, middle_game_config, hard_game_config
 from logic.logicGame import Game, dict_to_game_config
 
@@ -52,13 +52,14 @@ while running:
     
     draw_blocks_with_images(screen, game,grid_offset)
     draw_bottom_bar(screen,game)
+    draw_help_buttons(screen, game)
 
     # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            handle_block_click(event.pos,game,grid_offset)
+            handle_block_click(screen,event.pos,game,grid_offset)
 
     pygame.display.update()
 

@@ -1,5 +1,6 @@
 import pygame
-from Resources.assets import BLOCKS_PIC_LOADED
+from Resources.assets import BLOCKS_PIC_LOADED,HELPER_PIC_LOADED
+from logic.helpersGame import shuffle_blocks
 
 
 # Configuration parameters
@@ -95,17 +96,6 @@ def draw_bottom_bar(screen,game):
                 screen.blit(animal_image, (x, y))
  
 
-def handle_block_click(pos,game,grid_offset):
-    for block in reversed(game.blocks):  # Kiểm tra các block từ trên xuống dưới
-        if block.is_removed or not game.is_block_interactable(block):  # Gọi phương thức từ đối tượng game
-            continue  # Bỏ qua nếu block bị xóa hoặc không thể tương tác
-
-        rect = pygame.Rect(block.x + grid_offset[0], block.y + grid_offset[1], BLOCK_SIZE, BLOCK_SIZE)
-
-        if rect.collidepoint(pos):  # Nếu người chơi click vào block này
-            game.select_block(block)
-            block.is_removed = True
-            break
 
 def center_grid(game):
     
@@ -121,5 +111,56 @@ def center_grid(game):
         (SCREEN_HEIGHT - grid_height) // 2 - min_y
     ]
     return grid_offset
+#?////////////////////////////////////////////////////////////
+# 
+#    
+def draw_help_buttons(screen, game):
+    button_keys=['shuffle','back','triple']
+    button_width = 80
+    button_height = 40
     
+    
+    
+    start_x = (SCREEN_WIDTH - 3 * button_width - 2 * 5) // 2 
+    y = SCREEN_HEIGHT - 60  
+
+    button_positions = [(start_x + i* (button_width + 5), y) for i in range(3)]
+    
+   
+    for i, (x, y) in enumerate(button_positions):
+        for i, (x, y) in enumerate(button_positions):
+            if button_keys[i] in HELPER_PIC_LOADED:  # Đảm bảo helper button tồn tại
+                button_image = pygame.transform.scale(
+                    HELPER_PIC_LOADED[button_keys[i]], (button_width, button_height)
+                )
+                screen.blit(button_image, (x, y))
+            else:
+                print(f"Image for button '{button_keys[i]}' not found.")
+
+    # Kiểm tra sự kiện click
+    if pygame.mouse.get_pressed()[0]:
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        for i, (x, y) in enumerate(button_positions):
+            if x <= mouse_x <= x + button_width and y <= mouse_y <= y + button_height:
+                if button_keys[i] == 'shuffle':
+                    shuffle_blocks(game,screen)  
+                # elif buttons[i] == 'Reset':
+                #     reset_blocks(game)   
+                # elif buttons[i] == 'Hint':
+                #     hint_blocks(game)   
+
+
+
+def handle_block_click(screen,pos,game,grid_offset):
+    for block in reversed(game.blocks):  # Kiểm tra các block từ trên xuống dưới
+        if block.is_removed or not game.is_block_interactable(block):  # Gọi phương thức từ đối tượng game
+            continue  # Bỏ qua nếu block bị xóa hoặc không thể tương tác
+
+        rect = pygame.Rect(block.x + grid_offset[0], block.y + grid_offset[1], BLOCK_SIZE, BLOCK_SIZE)
+
+        if rect.collidepoint(pos):  # Nếu người chơi click vào block này
+            game.select_block(block)
+            block.is_removed = True
+            break
+    draw_help_buttons(screen, game)
 
