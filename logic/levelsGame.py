@@ -17,7 +17,7 @@ level_config = {
              [1, 1, 1],
              [1, 1, 1]]
         ],
-        "time_limit": 60,
+       
         "layer_offsets":[
             {"x_offset": 0, "y_offset": 0,"padding": 45},
             {"x_offset": 0, "y_offset": 30,"padding": 45}
@@ -233,7 +233,7 @@ def create_game_config(level):
         "level": level,
         "grid_size": (len(level_config[level]["pattern"][0]), len(level_config[level]["pattern"][0][0])),
         "pattern": generate_pattern(level),
-        "time_limit": level_config[level]["time_limit"],
+       
         "layer_offsets": level_config[level].get("layer_offsets", [{"x_offset": 0, "y_offset": 0} for _ in range(len(level_config[level]["pattern"]))]),
         "block_pic": list(BLOCKS_PIC_LOADED.values())    
     }

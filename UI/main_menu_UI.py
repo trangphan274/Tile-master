@@ -13,7 +13,7 @@ BUTTON_HOVER = (100, 149, 237)
 FONT_SIZE = 36
 BLOCK_SIZE = 50
 pygame.init()
-font = pygame.font.SysFont(None, FONT_SIZE)
+font = pygame.font.Font("Resources/font/LuckiestGuy-Regular.ttf", FONT_SIZE)
 
 
 def menu_UI(screen, on_mode_selected):

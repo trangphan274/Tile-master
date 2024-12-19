@@ -207,6 +207,8 @@ class Game:
             return f"Current Score: {self.current_score}, Selected Blocks: {len(self.selected_blocks)}"
 
     def reset_game(self, game_config: GameConfigType):
+        if isinstance(game_config, dict):  
+            game_config = dict_to_game_config(game_config)
         self.blocks = []
         self.current_score = 0
         self.game_over = False

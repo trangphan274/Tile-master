@@ -1,7 +1,7 @@
 import pygame
 from Resources.assets import BLOCKS_PIC_LOADED,HELPER_PIC_LOADED
 from logic.helpersGame import shuffle_blocks,triple_break
-
+from UI.game_menu_UI import draw_game_menu_ui
 
 # Configuration parameters
 SCREEN_WIDTH = 600
@@ -150,6 +150,32 @@ def draw_help_buttons(screen, game):
                 elif button_keys[i] == 'triple':
                     triple_break(game)
                 
+def draw_game_menu_button(screen,game):
+    
+    
+    button_image = pygame.image.load('Resources/game menu/game_menu.png').convert_alpha()
+    button_image = pygame.transform.scale(button_image, (60, 60))  # Tùy chỉnh kích thước
+    
+
+    # Vị trí nút (góc trên bên trái)
+    button_position = (10, 10)
+    x, y = button_position
+    button_width, button_height = button_image.get_size()
+
+    # Vẽ nút
+    screen.blit(button_image, button_position)
+    if pygame.mouse.get_pressed()[0]:
+        mouse_x,mouse_y = pygame.mouse.get_pos()
+        if x<= mouse_x <= x+button_width and y<mouse_y<=y+button_height:
+            draw_game_menu_ui(screen)
+            return "menu_pressed"
+
+      
+
+
+
+
+
 
 
 def handle_block_click(screen,pos,game,grid_offset):
