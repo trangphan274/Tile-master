@@ -17,7 +17,7 @@ animal_images = {name: pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE)) f
 def draw_blocks_with_images(screen,game, grid_offset):
     
     for block in sorted(game.blocks, key=lambda b: (b.level, b.y, b.x)):
-        if block.is_removed:
+        if block.is_removed or block.status ==0:
             continue
 
         # Cập nhật vị trí block theo grid_offset
@@ -78,9 +78,8 @@ def draw_bottom_bar(screen,game):
     resized_icon = pygame.transform.scale(icon_image, (70, 70))
 
     icon_x = start_x -12
-    icon_y = y -65
-    
-    screen.blit(resized_icon, (icon_x, icon_y))  # Vẽ icon lên màn hình
+    icon_y = y -65    
+    screen.blit(resized_icon, (icon_x, icon_y))
      
     bottom_bar_image = pygame.transform.scale(bottom_bar_image, (total_width +10, 65))# ép hình
 
@@ -149,7 +148,7 @@ def draw_help_buttons(screen, game):
                 if button_keys[i] == 'shuffle':
                     shuffle_blocks(game,screen)  
                 elif button_keys[i] == 'triple':
-                    triple_break(game)
+                    triple_break(game,screen)
                 
 def draw_game_menu_button(screen,game):
 

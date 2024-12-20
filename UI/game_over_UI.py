@@ -19,7 +19,9 @@ def draw_game_over_screen(screen, is_win):
         result_board = RESULT_PIC_LOADED["lose_board"]
         result_cat = RESULT_PIC_LOADED["lose_cat"]
 
-    
+    result_board = pygame.transform.scale(result_board, (screen.get_width() // 2, screen.get_height() // 3))
+    result_cat = pygame.transform.scale(result_cat, (screen.get_width() // 6, screen.get_height() // 6))
+
     screen.blit(result_board, (screen.get_width() // 4, screen.get_height() // 6))
     screen.blit(result_cat, (screen.get_width() // 4 + 100, screen.get_height() // 3))  # Điều chỉnh vị trí nếu cần
     

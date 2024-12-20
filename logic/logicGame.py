@@ -3,7 +3,7 @@ import pygame
 from logic.typeGame import BlockType, GameConfigType
 from Resources.assets import BLOCKS_PIC
 from UI.game_over_UI import draw_game_over_screen
-
+import time
 
 GRID_COLS = 8
 GRID_ROWS = 6
@@ -136,7 +136,7 @@ class Game:
     def update_visibility(self):
     # After selecting or removing blocks, ensure visibility is updated for all blocks
         for block in self.blocks:
-            if block.status == 1:
+            if block.status !=0:
                 # Update the visibility status for the block if it's not covered
                 block.visible = self.is_block_visible(block)
                 block.interactable = self.is_block_interactable(block)
@@ -198,6 +198,11 @@ class Game:
         if all(block.status == 0 for block in self.blocks):
             print("Congratulations! You cleared all blocks.")
             self.game_over = True
+            
+            for block in self.blocks:
+                block.is_removed =True
+            pygame.display.flip()
+            time.sleep(1)
             draw_game_over_screen(screen, True)
 
     def reset_game(self, game_config: GameConfigType):

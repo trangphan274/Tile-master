@@ -190,6 +190,7 @@ def fill_layer(shape, block_pool):
                 grid_row.append(None)
         grid.append(grid_row)
     return grid
+
 # shuffle khó cho 1 số màn 
 
 def shuffle_difficult(block_pool):
@@ -209,7 +210,7 @@ def shuffle_difficult(block_pool):
     random.shuffle(new_pool)
     return new_pool
 
-# Hàm tạo pattern cho từng level
+
 def generate_pattern(level):
     config = level_config.get(level)
     if not config:
@@ -227,7 +228,6 @@ def generate_pattern(level):
     layers = [fill_layer(shape, block_pool) for shape in pattern]
     return layers
 
-# Tạo config game
 def create_game_config(level):
     return {
         "level": level,
@@ -238,7 +238,7 @@ def create_game_config(level):
         "block_pic": list(BLOCKS_PIC_LOADED.values())    
     }
 
-# Ví dụ tạo config cho các màn chơi
+
 easy_game_config = create_game_config(1)
 middle_game_config = create_game_config(2)
 hard_game_config = create_game_config(3)

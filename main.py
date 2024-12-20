@@ -10,7 +10,7 @@ from UI.game_over_UI import draw_game_over_screen
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
-WHITE = (245, 220, 185) # màu nền
+WHITE = (245, 220, 185)
 
 
 pygame.init()
@@ -22,6 +22,7 @@ grid_offset = None
 game = None
 paused =False
 game_over_state = False
+
 def on_mode_selected(mode):
     global grid_offset, game_config
     print(f"Selected mode: {mode}")
@@ -42,8 +43,17 @@ menu_UI(screen,on_mode_selected)
 #main
 running = True
 while running:
-    
-    if paused:
+    if game_over_state:
+        
+        action = draw_game_over_screen(screen,game.is_win)
+        if action =="replay":
+            game.reset_game(game_config)
+            game_over_state=False
+            game.game_over=False
+            paused =False
+        elif action =="quit":
+            running = False
+    elif paused:
         screen.fill(WHITE)
         draw_blocks_with_images(screen, game, grid_offset)
         draw_bottom_bar(screen, game)
@@ -77,7 +87,6 @@ while running:
         action = draw_game_menu_button(screen, game)
         if game.game_over:            
             game_over_state = True
-            action = draw_game_over_screen(screen,game)
             
         
         if action == "menu_pressed":
