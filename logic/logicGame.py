@@ -2,6 +2,8 @@ import random
 import pygame 
 from logic.typeGame import BlockType, GameConfigType
 from Resources.assets import BLOCKS_PIC
+from UI.game_over_UI import draw_game_over_screen
+
 
 GRID_COLS = 8
 GRID_ROWS = 6
@@ -42,7 +44,7 @@ class Game:
         self.game_over = False
         self.blocks = game_config.blocks
         self.selected_blocks = []
-        self.max_selected = 5  
+        self.max_selected = 7  
         self.level_num = game_config.level_num
         self.block_types = game_config.block_pic
         self.layer_offsets = game_config.layer_offsets
@@ -54,9 +56,7 @@ class Game:
         self.build_game(game_config)
 
 
-    def is_win(self):
-        return all(block.status == 0 for block in self.blocks)
-
+    
     def build_game(self, game_config: GameConfigType):
         blocks = self.generate_blocks(game_config)
         if len(blocks) < calculate_blocks_from_pattern(game_config.pattern):
@@ -123,12 +123,7 @@ class Game:
         return arranged_blocks
 
 
-
-
-
-
-
-   
+ 
     def is_block_interactable(self, block):
         for other in self.blocks:
             if other.block_id != block.block_id and other.level > block.level and other.status == 1:  # Kiểm tra trạng thái
@@ -157,23 +152,6 @@ class Game:
         return True  # Block không bị che
 
     
-    
-    def select_block(self, block):
-        if block not in self.selected_blocks:
-            self.selected_blocks.append(block)
-            block.status = 0  # Đánh dấu block đã bị xóa
-            print(f"Block {block.block_id} selected and moved to the slot.")
-
-            self.update_visibility()  # Đảm bảo cập nhật trạng thái hiển thị ngay sau khi xóa
-            self.match_blocks_in_slot()  # Kiểm tra khớp block trong slot
-
-            if len(self.selected_blocks) >= self.max_selected:
-                self.game_over = True
-                print("Game Over! Slot is full.")
-
-        self.check_win_condition()
-
-
     def match_blocks_in_slot(self):
         count = {}
         for block in self.selected_blocks:
@@ -193,18 +171,34 @@ class Game:
                 self.current_score += 3
                 break  # Ngừng việc kiểm tra các loại block khác sau khi đã bể 1 loại
 
+    def select_block(self, block,screen):
+        if self.game_over:
+            return
+        if block not in self.selected_blocks:
+            self.selected_blocks.append(block)
+            block.status = 0  # Đánh dấu block đã bị xóa
+            print(f"Block {block.block_id} selected and moved to the slot.")
 
+            self.update_visibility()  # Đảm bảo cập nhật trạng thái hiển thị ngay sau khi xóa
+            self.match_blocks_in_slot()  # Kiểm tra khớp block trong slot
 
-    def check_win_condition(self):
+            if len(self.selected_blocks) >= self.max_selected:
+                self.game_over = True
+                print("Game Over! Slot is full.")
+                draw_game_over_screen(screen, False)
+
+        self.check_win_condition(screen)
+
+   
+
+    def is_win(self):
+        return all(block.status == 0 for block in self.blocks)
+
+    def check_win_condition(self,screen):
         if all(block.status == 0 for block in self.blocks):
             print("Congratulations! You cleared all blocks.")
             self.game_over = True
-
-    def game_status(self):
-        if self.game_over:
-            return f"Game Over! Final Score: {self.current_score}"
-        else:
-            return f"Current Score: {self.current_score}, Selected Blocks: {len(self.selected_blocks)}"
+            draw_game_over_screen(screen, True)
 
     def reset_game(self, game_config: GameConfigType):
         if isinstance(game_config, dict):  

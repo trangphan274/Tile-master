@@ -25,12 +25,18 @@ HELPER_PIC={
 }
 
 GAME_MENU_PIC={
-    "resume":"Resources/game menu/resume.png ",
-    "replay":"Resources/game menu/replay.png",
-    "quit":"Resources/game menu/quit.png ",
-    "back_home":"Resources/game menu/back_home.png",
-    "game_menu":"Resources/game menu/game_menu.png",
-    "menu_board":"Resources/game menu/menu_board.png"
+    "resume":"Resources/game board/resume.png ",
+    "replay":"Resources/game board/replay.png",
+    "quit":"Resources/game board/quit.png ",
+    "back_home":"Resources/game board/back_home.png",
+    "game_menu":"Resources/game board/game_menu.png",
+    "menu_board":"Resources/game board/menu_board.png"
+}
+RESULT_PIC={
+    "win_board":"Resources/game board/win_board.png",
+    "win_cat":"Resources/game board/win_cat.png",
+    "lose_board":"Resources/game board/lose_board.png",
+    "lose_cat":"Resources/game board/lose_cat.png"
 }
 
 
@@ -59,8 +65,17 @@ for key, path in GAME_MENU_PIC.items():
     except pygame.error as e:
         print(f"Error loading image for {key} at {path}: {e}")
 
+RESULT_PIC_LOADED ={}
+for key, path in RESULT_PIC.items():
+    try:
+        RESULT_PIC_LOADED[key] = pygame.image.load(path)
+    except pygame.error as e:
+        print(f"Error loading image for {key} at {path}: {e}")
+
+
 
 # Kiểm tra các hình ảnh đã tải thành công
 # print(f"Loaded images: {BLOCKS_PIC_LOADED.keys()}")
 
 
+print(RESULT_PIC_LOADED)

@@ -15,6 +15,7 @@ animal_images = {name: pygame.transform.scale(image, (BLOCK_SIZE, BLOCK_SIZE)) f
 
 # contain visibility effects
 def draw_blocks_with_images(screen,game, grid_offset):
+    
     for block in sorted(game.blocks, key=lambda b: (b.level, b.y, b.x)):
         if block.is_removed:
             continue
@@ -151,9 +152,10 @@ def draw_help_buttons(screen, game):
                     triple_break(game)
                 
 def draw_game_menu_button(screen,game):
+
     
     
-    button_image = pygame.image.load('Resources/game menu/game_menu.png').convert_alpha()
+    button_image = pygame.image.load('Resources/game board/game_menu.png').convert_alpha()
     button_image = pygame.transform.scale(button_image, (60, 60))  # Tùy chỉnh kích thước
     
 
@@ -170,13 +172,6 @@ def draw_game_menu_button(screen,game):
             draw_game_menu_ui(screen)
             return "menu_pressed"
 
-      
-
-
-
-
-
-
 
 def handle_block_click(screen,pos,game,grid_offset):
     for block in reversed(game.blocks):  # Kiểm tra các block từ trên xuống dưới
@@ -186,7 +181,7 @@ def handle_block_click(screen,pos,game,grid_offset):
         rect = pygame.Rect(block.x + grid_offset[0], block.y + grid_offset[1], BLOCK_SIZE, BLOCK_SIZE)
 
         if rect.collidepoint(pos):  # Nếu người chơi click vào block này
-            game.select_block(block)
+            game.select_block(block,screen)
             block.is_removed = True
             break
     

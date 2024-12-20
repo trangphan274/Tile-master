@@ -6,6 +6,7 @@ from UI.levels_UI import draw_blocks_with_images,draw_bottom_bar,handle_block_cl
 from logic.levelsGame import easy_game_config, middle_game_config, hard_game_config
 from logic.logicGame import Game, dict_to_game_config
 from UI.game_menu_UI import draw_game_menu_ui
+from UI.game_over_UI import draw_game_over_screen
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
@@ -20,7 +21,7 @@ running = True
 grid_offset = None 
 game = None
 paused =False
-
+game_over_state = False
 def on_mode_selected(mode):
     global grid_offset, game_config
     print(f"Selected mode: {mode}")
@@ -38,11 +39,7 @@ def on_mode_selected(mode):
    
 
 menu_UI(screen,on_mode_selected)
-
-
-
-
-
+#main
 running = True
 while running:
     
@@ -78,15 +75,21 @@ while running:
         draw_help_buttons(screen, game)
         draw_game_menu_button(screen,game)
         action = draw_game_menu_button(screen, game)
+        if game.game_over:            
+            game_over_state = True
+            action = draw_game_over_screen(screen,game)
+            
+        
         if action == "menu_pressed":
             paused = True
+            
 
     # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if not paused:
+            if not paused and not game.game_over:
                 handle_block_click(screen,event.pos,game,grid_offset)
 
     pygame.display.update()
