@@ -179,15 +179,15 @@ class Game:
             block.status = 0  # Đánh dấu block đã bị xóa
             print(f"Block {block.block_id} selected and moved to the slot.")
 
-            self.update_visibility()  # Đảm bảo cập nhật trạng thái hiển thị ngay sau khi xóa
-            self.match_blocks_in_slot()  # Kiểm tra khớp block trong slot
+            self.update_visibility()  
+            self.match_blocks_in_slot()  
 
             if len(self.selected_blocks) >= self.max_selected:
                 self.game_over = True
                 print("Game Over! Slot is full.")
                 draw_game_over_screen(screen, False)
 
-        self.check_win_condition(screen)
+            self.check_win_condition(screen)
 
    
 
@@ -196,20 +196,17 @@ class Game:
 
     def check_win_condition(self,screen):
         if all(block.status == 0 for block in self.blocks):
-            print("Congratulations! You cleared all blocks.")
-            self.game_over = True
-            
-            for block in self.blocks:
-                block.is_removed =True
-            pygame.display.flip()
-            time.sleep(1)
-            draw_game_over_screen(screen, True)
+            if not self.game_over:
+                print("Congratulations! You cleared all blocks.")
+                self.game_over = True                
+                for block in self.blocks:
+                    block.is_removed =True
+                draw_game_over_screen(screen, True)
 
     def reset_game(self, game_config: GameConfigType):
         if isinstance(game_config, dict):  
             game_config = dict_to_game_config(game_config)
         self.blocks = []
-        self.current_score = 0
         self.game_over = False
         self.selected_blocks = []
         self.build_game(game_config)

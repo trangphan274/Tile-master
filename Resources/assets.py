@@ -74,7 +74,7 @@ for key, path in RESULT_PIC.items():
 
 
 
-# Kiểm tra các hình ảnh đã tải thành công
+
 # print(f"Loaded images: {BLOCKS_PIC_LOADED.keys()}")
 
 

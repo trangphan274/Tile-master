@@ -22,8 +22,8 @@ def draw_blocks_with_images(screen,game, grid_offset):
 
         # Cập nhật vị trí block theo grid_offset
         rect = pygame.Rect(
-            block.x + grid_offset[0],  # Thêm offset vào tọa độ x
-            block.y + grid_offset[1],  # Thêm offset vào tọa độ y
+            block.x + grid_offset[0],  
+            block.y + grid_offset[1],  
             BLOCK_SIZE,
             BLOCK_SIZE
         )
@@ -35,7 +35,7 @@ def draw_blocks_with_images(screen,game, grid_offset):
 
         # Đổ bóng
         shadow_offset = 5
-        shadow_color = (100, 100, 100, 100)  # Màu xám nhạt với độ trong suốt
+        shadow_color = (100, 100, 100, 100)  
         shadow_rect = rect.move(shadow_offset, shadow_offset)
         shadow_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
         pygame.draw.rect(shadow_surface, shadow_color, (0, 0, BLOCK_SIZE, BLOCK_SIZE), border_radius=8)

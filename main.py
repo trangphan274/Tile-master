@@ -44,8 +44,8 @@ menu_UI(screen,on_mode_selected)
 running = True
 while running:
     if game_over_state:
-        
-        action = draw_game_over_screen(screen,game.is_win)
+        screen.fill(WHITE)
+        action = draw_game_over_screen(screen,game.is_win())
         if action =="replay":
             game.reset_game(game_config)
             game_over_state=False

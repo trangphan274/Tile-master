@@ -35,14 +35,14 @@ def draw_game_menu_ui(screen):
     
 
     for option in options:
-        # Lấy thông số của nút từ dictionary
+        
         button_spec = button_specs[option]
         x = button_spec["x"]
         y = button_spec["y"]
         w = button_spec["w"]
         h = button_spec["h"]
 
-        # Vẽ nút với kích thước và vị trí tùy chỉnh
+       
         button_img = pygame.transform.scale(button_images[option], (w, h))
         screen.blit(button_img, (x, y))
         

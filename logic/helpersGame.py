@@ -44,7 +44,8 @@ def triple_break(game: Game,screen):
         for block in selected_group:
             block.is_removed = True
             block.status = 0
-            game.update_visibility()
+        
+        
     game.check_win_condition(screen)
 
         

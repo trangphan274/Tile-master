@@ -141,7 +141,7 @@ def create_block_pool(total_blocks, level):
     if not block_pic:
         raise ValueError("The block_pic list is empty!")
     
-    # Đặt số icon dựa trên level
+
     if level == 1:
         num_icons = 3
     elif level == 2:
@@ -154,7 +154,7 @@ def create_block_pool(total_blocks, level):
     block_pool = []
     blocks_per_icon = (total_blocks // 3) // num_icons * 3  # bội 3
 
-    # Phân phối icon 
+    # chia icon 
     for i in range(num_icons):
         animal = block_pic[i % len(block_pic)]
         block_pool.extend([animal] * blocks_per_icon)
