@@ -89,12 +89,19 @@ def draw_bottom_bar(screen,game):
     for i in range(7):
         x = start_x + i * (slot_width + slot_spacing)
         pygame.draw.rect(screen, block_color, (x, y, slot_width, slot_width))
+
         if i < len(game.selected_blocks):
-            block = game.selected_blocks[i]
+            # Chuyển selected_blocks từ set thành list để duyệt theo index
+            selected_blocks_list = list(game.selected_blocks)
+            block = selected_blocks_list[i]  # Truy xuất block từ list
+
+            # Lấy ảnh của block
             animal_image = animal_images.get(block.type_)
+            
             if animal_image:
+                # Vẽ hình ảnh lên màn hình
                 screen.blit(animal_image, (x, y))
- 
+
 
 
 def center_grid(game):

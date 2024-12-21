@@ -22,31 +22,23 @@ def shuffle_blocks(game: Game,screen):
     print("shuffled successfully!")
 
 
-def triple_break(game: Game,screen):
-
+def triple_break(game: Game, screen):
     remaining_blocks = [block for block in game.blocks if not block.is_removed]
     block_groups = {}
-    
+
     # Nhóm các block theo loại
     for block in remaining_blocks:
-        if block.type_ not in block_groups:
-            block_groups[block.type_] = []
-        block_groups[block.type_].append(block)
+        block_groups.setdefault(block.type_, []).append(block)
 
-    selected_group = None
     for group in block_groups.values():
         if len(group) >= 3:
-            selected_group = group[:3]
+            for block in group[:3]:
+                block.is_removed = True
+                block.status = 0
             break
-    
-    if selected_group:
-       
-        for block in selected_group:
-            block.is_removed = True
-            block.status = 0
-        
-        
+
     game.check_win_condition(screen)
+
 
         
        

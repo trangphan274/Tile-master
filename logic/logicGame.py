@@ -30,12 +30,8 @@ def dict_to_game_config(config_dict):
     )
 
 def calculate_blocks_from_pattern(pattern):
-    total_blocks = 0
-    for layer in pattern:  
-        for row in layer:  
-            total_blocks += len(row)  
-    return total_blocks
-
+    
+    return sum(sum(1 for cell in row if cell) for layer in pattern for row in layer)
 class Game:
     def __init__(self, game_config: GameConfigType):
         
@@ -43,12 +39,12 @@ class Game:
         self.current_score = 0
         self.game_over = False
         self.blocks = game_config.blocks
-        self.selected_blocks = []
+        self.selected_blocks = set()
         self.max_selected = 7  
         self.level_num = game_config.level_num
         self.block_types = game_config.block_pic
         self.layer_offsets = game_config.layer_offsets
-        
+        self.remaining_blocks = self.num_blocks
         # Lưu x_offset và y_offset từ layer_offsets
         self.x_offset = [layer["x_offset"] for layer in game_config.layer_offsets]
         self.y_offset = [layer["y_offset"] for layer in game_config.layer_offsets]
@@ -68,24 +64,23 @@ class Game:
         total_blocks = calculate_blocks_from_pattern(game_config.pattern)
         blocks = []
         block_types = game_config.block_pic
-        
-        # Kiểm tra nếu animals bị rỗng
+
         if not block_types:
             raise ValueError("Danh sách hình block không được rỗng!")
 
-        for i in range(total_blocks):  # Tạo block theo số lượng từ pattern
+        for i in range(total_blocks):
             block = BlockType(
                 block_id=i,
-                x=0,  # Gán tạm, sẽ được cập nhật trong arrange_blocks
+                x=0,  # Gán tạm, sẽ cập nhật sau
                 y=0,
                 level=0,  # Gán tạm
-                type_=block_types[i % len(block_types)],  # Gán kiểu block từ animals
+                type_=block_types[i % len(block_types)],
                 status=1
             )
             blocks.append(block)
         
-        print(f"Số block đã tạo: {len(blocks)}")
         return blocks
+
 
 
     
@@ -175,7 +170,7 @@ class Game:
         if self.game_over:
             return
         if block not in self.selected_blocks:
-            self.selected_blocks.append(block)
+            self.selected_blocks.add(block)
             block.status = 0  # Đánh dấu block đã bị xóa
             print(f"Block {block.block_id} selected and moved to the slot.")
 
