@@ -21,7 +21,7 @@ def shuffle_blocks(game: Game,screen):
 
     print("shuffled successfully!")
 
-
+#greedy
 def triple_break(game: Game, screen):
     remaining_blocks = [block for block in game.blocks if not block.is_removed]
     block_groups = {}
@@ -30,15 +30,14 @@ def triple_break(game: Game, screen):
     for block in remaining_blocks:
         block_groups.setdefault(block.type_, []).append(block)
 
-    for group in block_groups.values():
-        if len(group) >= 3:
-            for block in group[:3]:
-                block.is_removed = True
-                block.status = 0
-            break
+    # Tìm nhóm lớn nhất (Greedy)
+    largest_group = max(block_groups.values(), key=len, default=[])
+    if len(largest_group) >= 3:
+        for block in largest_group[:3]:
+            block.is_removed = True
+            block.status = 0
 
     game.check_win_condition(screen)
-
 
         
        
