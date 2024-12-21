@@ -1,7 +1,7 @@
 
 import random
 from Resources.assets import BLOCKS_PIC,BLOCKS_PIC_LOADED
-
+import copy
 
 #ảnh
 block_pic = list(BLOCKS_PIC.values())
@@ -179,36 +179,35 @@ def create_block_pool(total_blocks, level):
 
 
 # fill grid theo shape
+#DFS
 def fill_layer(shape, block_pool):
-    grid = []
-    for row in shape:
-        grid_row = []
-        for cell in row:
-            if cell == 1:  # Chỉ lấp block vào ô có shape = 1
-                grid_row.append(block_pool.pop())
-            else:
-                grid_row.append(None)
-        grid.append(grid_row)
+    rows, cols = len(shape), len(shape[0])
+    visited = [[False] * cols for _ in range(rows)]
+    grid = [[None] * cols for _ in range(rows)]
+
+    def dfs(r, c):
+        if r < 0 or c < 0 or r >= rows or c >= cols or visited[r][c] or shape[r][c] == 0:
+            return
+        visited[r][c] = True
+        grid[r][c] = block_pool.pop()  # Lấp block
+        # Duyệt 4 hướng
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            dfs(r + dr, c + dc)
+
+    for r in range(rows):
+        for c in range(cols):
+            if not visited[r][c] and shape[r][c] == 1:
+                dfs(r, c)
     return grid
 
 # shuffle khó cho 1 số màn 
-
+#Knuth Shuffle(fish yeates)
 def shuffle_difficult(block_pool):
-    random.shuffle(block_pool)
-    new_pool= []
-    pairs =[]
-    #gom lại theo cặp 
-    while len(block_pool)>=2:
-        pair =[block_pool.pop(),block_pool.pop()]
-        pairs.append(pair)
-    # Rải cặp và block lẻ
-    for pair in pairs:
-        new_pool.extend(pair)
-        if block_pool:
-            new_pool.append(block_pool.pop())
-    # suffle lại 1 lần nữa
-    random.shuffle(new_pool)
-    return new_pool
+    n = len(block_pool)
+    for i in range(n - 1, 0, -1):
+        j = random.randint(0, i)
+        block_pool[i], block_pool[j] = block_pool[j], block_pool[i]
+    return block_pool
 
 
 def generate_pattern(level):
@@ -222,6 +221,7 @@ def generate_pattern(level):
         total_blocks += 1
 
     block_pool = create_block_pool(total_blocks,level)
+    
     difficult_levels=[3]
     if level in difficult_levels:
         block_pool = shuffle_difficult(block_pool)
