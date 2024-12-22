@@ -32,14 +32,34 @@ def triple_break(game: Game, screen):
 
     # Tìm nhóm lớn nhất (Greedy)
     largest_group = max(block_groups.values(), key=len, default=[])
-    
-    # Đảm bảo chỉ phá tối đa 3 viên
+
+    # Nếu nhóm lớn nhất có ít nhất 3 viên
     if len(largest_group) >= 3:
-        for block in largest_group[:3]:  # Chỉ lấy 3 viên đầu tiên
-            block.is_removed = True
-            block.status = 0
+        # Chỉ lấy 3 viên đầu tiên để phá
+        blocks_to_remove = largest_group[:3]
+
+        # Tính toán và dự đoán xem có nên phá nhóm này hay không
+        next_largest_group = max(
+            [group for group in block_groups.values() if group != largest_group], 
+            key=len, 
+            default=[]
+        )
+
+        # So sánh nhóm lớn tiếp theo với nhóm hiện tại để tránh bế tắc
+        if len(next_largest_group) >= 3:
+            # Nếu nhóm tiếp theo cũng lớn và có thể sẽ giúp sau này, thì cứ phá nhóm hiện tại
+            for block in blocks_to_remove:
+                block.is_removed = True
+                block.status = 0
+        else:
+            # Nếu nhóm tiếp theo không có tác dụng nhiều, ta vẫn phá nhóm hiện tại
+            for block in blocks_to_remove:
+                block.is_removed = True
+                block.status = 0
 
     game.check_win_condition(screen)
+
+
 
 
 
