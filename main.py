@@ -57,7 +57,7 @@ while running:
         screen.fill(WHITE)
         draw_blocks_with_images(screen, game, grid_offset)
         draw_bottom_bar(screen, game)
-        draw_help_buttons(screen, game)
+        draw_help_buttons(screen, game,game_config)
 
         overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 120))  

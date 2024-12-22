@@ -10,6 +10,7 @@ GRID_ROWS = 6
 BLOCK_SIZE = 50
 
 
+
 def dict_to_game_config(config_dict):
     num_layers = len(config_dict["pattern"])    
     if "layer_offsets" not in config_dict:
@@ -32,7 +33,8 @@ def calculate_blocks_from_pattern(pattern):
     return sum(sum(1 for cell in row if cell) for layer in pattern for row in layer)
 class Game:
     def __init__(self, game_config: GameConfigType):
-        
+        pygame.mixer.init()
+        self.block_break_sound = pygame.mixer.Sound("Resources/font/mixkit-positive-notification-951.wav")
         self.num_blocks = calculate_blocks_from_pattern(game_config.pattern)
         self.current_score = 0
         self.game_over = False
@@ -152,6 +154,7 @@ class Game:
             if len(matching_blocks) >= 3:
                 print(f"Matched 3 blocks of type {block.type_}!")
                 # Xóa 3 block giống nhau
+                self.block_break_sound.play()
                 blocks_to_remove = matching_blocks[:3]
                 for block in blocks_to_remove:
                     self.selected_blocks.remove(block)
