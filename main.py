@@ -82,7 +82,7 @@ while running:
         screen.fill(WHITE)
         draw_blocks_with_images(screen, game,grid_offset)
         draw_bottom_bar(screen,game)
-        draw_help_buttons(screen, game)
+        draw_help_buttons(screen, game,game_config)
         draw_game_menu_button(screen,game)
         action = draw_game_menu_button(screen, game)
         if game.game_over:            

@@ -155,7 +155,7 @@ def draw_help_buttons(screen, game,game_config):
                 if button_keys[i] == 'shuffle':
                     shuffle_blocks(game,screen)  
                 elif button_keys[i] == 'triple':
-                    triple_break(game,screen,game_config)
+                    triple_break(game,screen)
                 
 def draw_game_menu_button(screen,game):
 
