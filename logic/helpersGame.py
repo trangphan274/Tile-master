@@ -38,26 +38,25 @@ def triple_break(game: Game, screen):
         # Chỉ lấy 3 viên đầu tiên để phá
         blocks_to_remove = largest_group[:3]
 
-        # Tính toán và dự đoán xem có nên phá nhóm này hay không
-        next_largest_group = max(
-            [group for group in block_groups.values() if group != largest_group], 
-            key=len, 
-            default=[]
-        )
+        # Dự đoán trạng thái sau khi phá nhóm
+        simulated_groups = block_groups.copy()
+        simulated_groups[largest_group[0].type_] = simulated_groups[largest_group[0].type_][3:]
+        simulated_groups = {k: v for k, v in simulated_groups.items() if len(v) > 0}
 
-        # So sánh nhóm lớn tiếp theo với nhóm hiện tại để tránh bế tắc
-        if len(next_largest_group) >= 3:
-            # Nếu nhóm tiếp theo cũng lớn và có thể sẽ giúp sau này, thì cứ phá nhóm hiện tại
+        # Tính nhóm lớn nhất kế tiếp trong trạng thái mô phỏng
+        next_largest_group = max(simulated_groups.values(), key=len, default=[])
+
+        # So sánh nhóm tiếp theo với nhóm hiện tại
+        if len(next_largest_group) >= 3 or len(simulated_groups) > 1:
+            # Phá nhóm hiện tại
             for block in blocks_to_remove:
                 block.is_removed = True
                 block.status = 0
         else:
-            # Nếu nhóm tiếp theo không có tác dụng nhiều, ta vẫn phá nhóm hiện tại
-            for block in blocks_to_remove:
-                block.is_removed = True
-                block.status = 0
+            print("avoid deadlock")
 
     game.check_win_condition(screen)
+
 
 
 
