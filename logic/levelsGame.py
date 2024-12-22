@@ -202,12 +202,35 @@ def fill_layer(shape, block_pool):
 
 # shuffle khó cho 1 số màn 
 #Knuth Shuffle(fish yeates)
-def shuffle_difficult(block_pool):
+def shuffle_medium(block_pool):
     n = len(block_pool)
     for i in range(n - 1, 0, -1):
         j = random.randint(0, i)
         block_pool[i], block_pool[j] = block_pool[j], block_pool[i]
     return block_pool
+
+def shuffle_hard(block_pool):
+    n = len(block_pool)
+    
+    #Xáo trộn lần đầu bằng Knuth Shuffle
+    for i in range(n - 1, 0, -1):
+        j = random.randint(0, i)
+        block_pool[i], block_pool[j] = block_pool[j], block_pool[i]
+    
+    #  Xáo trộn lại một vài lần
+    for _ in range(random.randint(2, 5)): 
+        i = random.randint(0, n - 1)
+        j = random.randint(0, n - 1)
+        block_pool[i], block_pool[j] = block_pool[j], block_pool[i]
+
+    #  Đảm bảo sự phân phối đều (hoán đổi giữa các vùng)
+    half_n = n // 2
+    for i in range(half_n):
+        j = random.randint(half_n, n - 1)
+        block_pool[i], block_pool[j] = block_pool[j], block_pool[i]
+    
+    return block_pool
+
 
 
 def generate_pattern(level):
@@ -222,9 +245,13 @@ def generate_pattern(level):
 
     block_pool = create_block_pool(total_blocks,level)
     
-    difficult_levels=[3]
-    if level in difficult_levels:
-        block_pool = shuffle_difficult(block_pool)
+    medium_levels=[2]
+    hard_levels =[3]
+
+    if level in medium_levels:
+        block_pool = shuffle_medium(block_pool)
+    if level in hard_levels:
+        block_pool = shuffle_hard(block_pool)
     layers = [fill_layer(shape, block_pool) for shape in pattern]
     return layers
 
