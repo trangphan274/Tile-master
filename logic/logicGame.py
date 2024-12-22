@@ -15,18 +15,16 @@ def dict_to_game_config(config_dict):
     if "layer_offsets" not in config_dict:
         config_dict["layer_offsets"] = [{"x_offset": 0, "y_offset": 0}] * num_layers
 
-    # Lấy x_offset, y_offset từ layer_offsets của từng lớp
-    x_offsets = [layer["x_offset"] for layer in config_dict["layer_offsets"]]
-    y_offsets = [layer["y_offset"] for layer in config_dict["layer_offsets"]]
+    
     
     # Tạo đối tượng GameConfigType
     return GameConfigType(
         level_num=config_dict["level"],
-        random_blocks=config_dict.get("random_blocks", []),
+        
         block_pic=list(BLOCKS_PIC.keys()),
         blocks=[],  
         pattern=config_dict["pattern"],
-        layer_offsets=config_dict["layer_offsets"],  #  layer_offsets đã được cập nhật
+        layer_offsets=config_dict["layer_offsets"],  
     )
 
 def calculate_blocks_from_pattern(pattern):
@@ -39,7 +37,7 @@ class Game:
         self.current_score = 0
         self.game_over = False
         self.blocks = game_config.blocks
-        self.selected_blocks = set()
+        self.selected_blocks = []
         self.max_selected = 7  
         self.level_num = game_config.level_num
         self.block_types = game_config.block_pic
@@ -148,29 +146,24 @@ class Game:
 
     
     def match_blocks_in_slot(self):
-        count = {}
         for block in self.selected_blocks:
-            if block.type_ not in count:
-                count[block.type_] = 0
-            count[block.type_] += 1
-
-        # Duyệt qua từng loại block
-        for block_type, num in count.items():
-            if num >= 3:  # Kiểm tra có đủ 3 block cùng loại không
-                print(f"Matched 3 blocks of type {block_type}!")
-                # Xóa 3 block giống nhau ở bất kỳ vị trí nào trong thanh
-                blocks_to_remove = [block for block in self.selected_blocks if block.type_ == block_type][:3]
+            # Kiểm tra có đủ 3 block cùng loại không
+            matching_blocks = [b for b in self.selected_blocks if b.type_ == block.type_]
+            if len(matching_blocks) >= 3:
+                print(f"Matched 3 blocks of type {block.type_}!")
+                # Xóa 3 block giống nhau
+                blocks_to_remove = matching_blocks[:3]
                 for block in blocks_to_remove:
                     self.selected_blocks.remove(block)
                     block.is_removed = True
                 self.current_score += 3
-                break  # Ngừng việc kiểm tra các loại block khác sau khi đã bể 1 loại
+                break  # Ngừng kiểm tra sau khi đã bể 1 loại block
 
     def select_block(self, block,screen):
         if self.game_over:
             return
         if block not in self.selected_blocks:
-            self.selected_blocks.add(block)
+            self.selected_blocks.append(block)
             block.status = 0  # Đánh dấu block đã bị xóa
             print(f"Block {block.block_id} selected and moved to the slot.")
 

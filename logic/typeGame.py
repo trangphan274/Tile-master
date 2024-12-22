@@ -15,20 +15,11 @@ class BlockType:
         self.is_removed = False  # Trạng thái đã xóa
 
 class GameConfigType:
-    def __init__(self, level_num, random_blocks, block_pic, blocks, pattern, layer_offsets=None):
+    def __init__(self, level_num, block_pic, blocks, pattern, layer_offsets=None):
         self.level_num = level_num  
-        self.random_blocks = random_blocks
+       
         self.block_pic = block_pic 
         self.blocks = blocks
         self.pattern = pattern  
         # Nếu không có layer_offsets, tạo mặc định với các x_offset và y_offset
         self.layer_offsets = layer_offsets if layer_offsets is not None else [{"x_offset": 0, "y_offset": 0} for _ in range(len(pattern))]
-
-
-
-class SkillType:
-    def __init__(self, name: str, desc: str, icon: str, action: Callable):
-        self.name = name  # Tên kỹ năng
-        self.desc = desc  # Mô tả kỹ năng
-        self.icon = icon  # Biểu tượng kỹ năng
-        self.action = action  # Hành động của kỹ năng (hàm)

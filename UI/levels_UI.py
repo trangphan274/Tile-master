@@ -121,7 +121,7 @@ def center_grid(game):
 #?////////////////////////////////////////////////////////////
 # 
 #    
-def draw_help_buttons(screen, game):
+def draw_help_buttons(screen, game,game_config):
     button_keys=['shuffle','triple']
     button_width = 80
     button_height = 40
@@ -155,7 +155,7 @@ def draw_help_buttons(screen, game):
                 if button_keys[i] == 'shuffle':
                     shuffle_blocks(game,screen)  
                 elif button_keys[i] == 'triple':
-                    triple_break(game,screen)
+                    triple_break(game,screen,game_config)
                 
 def draw_game_menu_button(screen,game):
 
